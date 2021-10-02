@@ -5,6 +5,7 @@
 
   let real_pawn: any[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
   let real_vertical_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
+  let real_horizontal_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   let ghost_pawn: number[][];
   let ghost_vertical_wall: number[][];
   let ghost_horizontal_wall: number[][];
@@ -15,6 +16,9 @@
   real_pawn[0][0].key = 1;
 
   real_vertical_wall = [...Array(game_row_size - 1)].map(() =>
+    Array(game_row_size - 1).fill(0)
+  ); // size(n-1,n-1)
+  real_horizontal_wall = [...Array(game_row_size - 1)].map(() =>
     Array(game_row_size - 1).fill(0)
   ); // size(n-1,n-1)
   ghost_pawn = [...Array(game_row_size)].map(() =>
@@ -94,6 +98,11 @@
   function isHCell(cy: number, cx: number): boolean {
     return isPath(cy) && hasPCell(cx);
   }
+  function hasHorizontalWall(map: any, cy: number, cx: number): boolean {
+    let [y, x] = toIndex(cy, cx);
+    if (x === game_row_size - 1) return false;
+    return isHCell(cy, cx) && map[y][x] === 1;
+  }
   function hasGhostHorizontalWall(map: any, cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
     if (x === game_row_size - 1) {
@@ -123,6 +132,11 @@
         if (y === game_row_size - 1) y--;
         real_vertical_wall_[y][x] = 1;
         real_vertical_wall = real_vertical_wall_;
+      } else if (isHCell(cy, cx)) {
+        let real_horizontal_wall_ = Object.assign([], real_horizontal_wall);
+        if (y === game_row_size - 1) y--;
+        real_horizontal_wall_[y][x] = 1;
+        real_horizontal_wall = real_horizontal_wall_;
       }
     };
   }
@@ -186,10 +200,15 @@
                 />
               {/if}
             {:else if hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
-              <div
-                class="ghost horizontalWall"
-                class:lastHorizontalWall={x === inner_n - 2}
-              />
+              {#if hasHorizontalWall(real_horizontal_wall, y, x)}
+                <div class="horizontalWall" />
+              {:else if hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
+                <div
+                  class="ghost horizontalWall"
+                  class:lastHorizontalWall={x === inner_n - 2}
+                />
+              {/if}
+              <div class="ghost horizontalWall" />
             {/if}
           </div>
         </div>
