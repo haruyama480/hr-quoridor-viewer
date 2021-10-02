@@ -279,10 +279,10 @@
 
   .pawn {
     position: absolute;
-    top: 20%;
-    left: 20%;
-    height: 60%;
-    width: 60%;
+    top: 15%;
+    left: 15%;
+    height: 70%;
+    width: 70%;
     border-radius: 50%;
     background: #000;
     z-index: 1;
