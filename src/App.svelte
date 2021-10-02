@@ -4,7 +4,7 @@
   $: inner_n = game_row_size * 2 + 1;
 
   let real_pawn: any[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
-  let real_virtical_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
+  let real_vertical_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   let ghost_pawn: number[][];
   let ghost_vertical_wall: number[][];
   let ghost_horizontal_wall: number[][];
@@ -14,7 +14,7 @@
   ); // size(n,n)
   real_pawn[0][0].key = 1;
 
-  real_virtical_wall = [...Array(game_row_size - 1)].map(() =>
+  real_vertical_wall = [...Array(game_row_size - 1)].map(() =>
     Array(game_row_size - 1).fill(0)
   ); // size(n-1,n-1)
   ghost_pawn = [...Array(game_row_size)].map(() =>
@@ -119,10 +119,10 @@
         real_pawn_[y][x].key = 1;
         real_pawn = real_pawn_;
       } else if (isVCell(cy, cx)) {
-        let real_virtical_wall_ = Object.assign([], real_virtical_wall);
+        let real_vertical_wall_ = Object.assign([], real_vertical_wall);
         if (y === game_row_size - 1) y--;
-        real_virtical_wall_[y][x] = 1;
-        real_virtical_wall = real_virtical_wall_;
+        real_vertical_wall_[y][x] = 1;
+        real_vertical_wall = real_vertical_wall_;
       }
     };
   }
@@ -177,7 +177,7 @@
                 <div class="ghost pawn" />
               {/if}
             {:else if isVCell(y, x)}
-              {#if hasVerticalWall(real_virtical_wall, y, x)}
+              {#if hasVerticalWall(real_vertical_wall, y, x)}
                 <div class="verticalWall" />
               {:else if hasGhostVerticalWall(ghost_vertical_wall, y, x)}
                 <div
