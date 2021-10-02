@@ -142,14 +142,16 @@
           on:click={handleClick(y, x)}
         >
           <div class="cell" style="height: 100%; width:100%;">
-            {#if hasRealPawn(real_pawn, y, x)}
-              <div
-                class="pawn"
-                in:receive={getRealPawn(real_pawn, y, x)}
-                out:send={getRealPawn(real_pawn, y, x)}
-              />
-            {:else if hasGhostPawn(ghost_pawn, y, x)}
-              <div class="ghost pawn" />
+            {#if isPCell(y, x)}
+              {#if hasRealPawn(real_pawn, y, x)}
+                <div
+                  class="pawn"
+                  in:receive={getRealPawn(real_pawn, y, x)}
+                  out:send={getRealPawn(real_pawn, y, x)}
+                />
+              {:else if hasGhostPawn(ghost_pawn, y, x)}
+                <div class="ghost pawn" />
+              {/if}
             {:else if hasGhostVerticalWall(y, x)}
               <div
                 class="ghost verticalWall"
