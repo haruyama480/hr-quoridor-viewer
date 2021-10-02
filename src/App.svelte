@@ -67,22 +67,20 @@
     const [y, x] = toIndex(cy, cx);
     return isPCell(cx, cy) && map[y][x] === 1;
   }
-  function hasGhostVerticalWall(cy: number, cx: number): boolean {
+  function hasGhostVerticalWall(map: any, cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
     if (y === game_row_size - 1) {
-      return isPath(cx) && hasPCell(cy) && ghost_vertical_wall[y - 1][x] === 1;
+      return isPath(cx) && hasPCell(cy) && map[y - 1][x] === 1;
     } else {
-      return isPath(cx) && hasPCell(cy) && ghost_vertical_wall[y][x] === 1;
+      return isPath(cx) && hasPCell(cy) && map[y][x] === 1;
     }
   }
-  function hasGhostHorizontalWall(cy: number, cx: number): boolean {
+  function hasGhostHorizontalWall(map: any, cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
     if (x === game_row_size - 1) {
-      return (
-        hasPCell(cx) && isPath(cy) && ghost_horizontal_wall[y][x - 1] === 1
-      );
+      return hasPCell(cx) && isPath(cy) && map[y][x - 1] === 1;
     } else {
-      return hasPCell(cx) && isPath(cy) && ghost_horizontal_wall[y][x] === 1;
+      return hasPCell(cx) && isPath(cy) && map[y][x] === 1;
     }
   }
   function handleMouseEnter(cy: number, cx: number): any {
@@ -152,12 +150,12 @@
               {:else if hasGhostPawn(ghost_pawn, y, x)}
                 <div class="ghost pawn" />
               {/if}
-            {:else if hasGhostVerticalWall(y, x)}
+            {:else if hasGhostVerticalWall(ghost_vertical_wall, y, x)}
               <div
                 class="ghost verticalWall"
                 class:lastVerticalWall={y === inner_n - 2}
               />
-            {:else if hasGhostHorizontalWall(y, x)}
+            {:else if hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
               <div
                 class="ghost horizontalWall"
                 class:lastHorizontalWall={x === inner_n - 2}
