@@ -2,8 +2,11 @@
   export let game_row_size: number;
   game_row_size = 5;
   $: inner_n = game_row_size * 2 + 1;
+  export let player_index: number;
+  player_index = 1;
 
   let real_pawn: any[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
+  let last_pawn_position: any = {}; // key:player_id, value [y,x]
   let real_vertical_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   let real_horizontal_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   let ghost_pawn: number[][];
@@ -14,6 +17,9 @@
     [...Array(game_row_size)].map(() => Object.assign({}))
   ); // size(n,n)
   real_pawn[0][0].key = 1;
+  real_pawn[2][2].key = 2;
+  last_pawn_position[1] = [0, 0];
+  last_pawn_position[2] = [2, 2];
 
   real_vertical_wall = [...Array(game_row_size - 1)].map(() =>
     Array(game_row_size - 1).fill(0)
@@ -80,10 +86,10 @@
   function isVCell(cy: number, cx: number): boolean {
     return hasPCell(cy) && isPath(cx);
   }
-  function hasVerticalWall(map: any, cy: number, cx: number): boolean {
+  function getVerticalWall(map: any, cy: number, cx: number): number {
     let [y, x] = toIndex(cy, cx);
-    if (y === game_row_size - 1) return false;
-    return isVCell(cy, cx) && map[y][x] === 1;
+    if (!isVCell(cy, cx) || y === game_row_size - 1) return 0;
+    return map[y][x];
   }
   function hasGhostVerticalWall(map: any, cy: number, cx: number): boolean {
     let [y, x] = toIndex(cy, cx);
@@ -95,10 +101,10 @@
   function isHCell(cy: number, cx: number): boolean {
     return isPath(cy) && hasPCell(cx);
   }
-  function hasHorizontalWall(map: any, cy: number, cx: number): boolean {
+  function getHorizontalWall(map: any, cy: number, cx: number): number {
     let [y, x] = toIndex(cy, cx);
-    if (x === game_row_size - 1) return false;
-    return isHCell(cy, cx) && map[y][x] === 1;
+    if (!isHCell(cy, cx) || x === game_row_size - 1) return 0;
+    return map[y][x];
   }
   function hasGhostHorizontalWall(map: any, cy: number, cx: number): boolean {
     let [y, x] = toIndex(cy, cx);
@@ -116,22 +122,24 @@
     return (event: any) => {
       let [y, x] = toIndex(cy, cx);
       if (isPCell(cy, cx)) {
-        let real_pawn_ = [...Array(game_row_size)].map(() =>
-          [...Array(game_row_size)].map(() => Object.assign({}))
-        );
-        real_pawn_[y][x].key = 1;
+        let real_pawn_ = JSON.parse(JSON.stringify(real_pawn)); // deep copy
+        const [prey, prex] = last_pawn_position[player_index];
+        real_pawn_[prey][prex] = {};
+        real_pawn_[y][x].key = player_index;
         real_pawn = real_pawn_;
+        last_pawn_position[player_index] = [y, x];
       } else if (isVCell(cy, cx)) {
         let real_vertical_wall_ = Object.assign([], real_vertical_wall);
         if (y === game_row_size - 1) y--;
-        real_vertical_wall_[y][x] = 1;
+        real_vertical_wall_[y][x] = player_index;
         real_vertical_wall = real_vertical_wall_;
       } else if (isHCell(cy, cx)) {
         let real_horizontal_wall_ = Object.assign([], real_horizontal_wall);
         if (x === game_row_size - 1) x--;
-        real_horizontal_wall_[y][x] = 1;
+        real_horizontal_wall_[y][x] = player_index;
         real_horizontal_wall = real_horizontal_wall_;
       }
+      player_index = player_index === 1 ? 2 : 1;
     };
   }
 
@@ -177,7 +185,7 @@
             {#if isPCell(y, x)}
               {#if hasRealPawn(real_pawn, y, x)}
                 <div
-                  class="pawn"
+                  class="pawn player{getRealPawn(real_pawn, y, x).key}"
                   in:receive={getRealPawn(real_pawn, y, x)}
                   out:send={getRealPawn(real_pawn, y, x)}
                 />
@@ -185,20 +193,32 @@
                 <div class="ghost pawn" />
               {/if}
             {:else if isVCell(y, x)}
-              {#if hasVerticalWall(real_vertical_wall, y, x)}
-                <div class="verticalWall" />
+              {#if getVerticalWall(real_vertical_wall, y, x) !== 0}
+                <div
+                  class="verticalWall player{getVerticalWall(
+                    real_vertical_wall,
+                    y,
+                    x
+                  )}"
+                />
               {:else if hasGhostVerticalWall(ghost_vertical_wall, y, x)}
                 <div
-                  class="ghost verticalWall"
+                  class="ghost verticalWall player{player_index}"
                   class:lastVerticalWall={y === inner_n - 2}
                 />
               {/if}
             {:else if isHCell(y, x)}
-              {#if hasHorizontalWall(real_horizontal_wall, y, x)}
-                <div class="horizontalWall" />
+              {#if getHorizontalWall(real_horizontal_wall, y, x) !== 0}
+                <div
+                  class="horizontalWall player{getHorizontalWall(
+                    real_horizontal_wall,
+                    y,
+                    x
+                  )}"
+                />
               {:else if hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
                 <div
-                  class="ghost horizontalWall"
+                  class="ghost horizontalWall player{player_index}"
                   class:lastHorizontalWall={x === inner_n - 2}
                 />
               {/if}
@@ -277,7 +297,8 @@
     height: 70%;
     width: 70%;
     border-radius: 50%;
-    background: #000;
+    border: 1px solid gray;
+    box-sizing: border-box;
     z-index: 1;
   }
 
@@ -288,7 +309,8 @@
   .horizontalWall {
     position: absolute;
     border-radius: 10%;
-    background: #000;
+    border: 1px solid gray;
+    box-sizing: border-box;
     z-index: 1;
   }
   .verticalWall {
@@ -319,5 +341,12 @@
 
   div:hover > .ghost {
     visibility: visible;
+  }
+
+  .player1 {
+    background: #000;
+  }
+  .player2 {
+    background: #fff;
   }
 </style>
