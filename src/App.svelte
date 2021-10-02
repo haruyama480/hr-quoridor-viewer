@@ -182,41 +182,47 @@
           on:mouseenter={handleMouseEnter(y, x)}
           on:click={handleClick(y, x)}
         >
-          <div class="cell" style="height: 100%; width:100%;">
-            {#if isPCell(y, x)}
-              {#if hasRealPawn(real_pawn, y, x)}
-                <div
-                  class="pawn player{getRealPawn(real_pawn, y, x).key}"
-                  in:receive={getRealPawn(real_pawn, y, x)}
-                  out:send={getRealPawn(real_pawn, y, x)}
-                />
-              {:else if hasGhostPawn(ghost_pawn, y, x)}
-                <div class="ghost pawn" />
+          {#if !isMargin(y) && !isMargin(x)}
+            <div class="cell" style="height: 100%; width:100%;">
+              {#if isPCell(y, x)}
+                {#if hasRealPawn(real_pawn, y, x)}
+                  <div
+                    class="pawn player{getRealPawn(real_pawn, y, x).key}"
+                    in:receive={getRealPawn(real_pawn, y, x)}
+                    out:send={getRealPawn(real_pawn, y, x)}
+                  />
+                {:else if hasGhostPawn(ghost_pawn, y, x)}
+                  <div class="ghost pawn" />
+                {/if}
+              {:else if isVCell(y, x)}
+                {#if getVerticalWall(rvwall, y, x) !== 0}
+                  <div
+                    class="verticalWall player{getVerticalWall(rvwall, y, x)}"
+                  />
+                {:else if hasGhostVerticalWall(ghost_vertical_wall, y, x)}
+                  <div
+                    class="ghost verticalWall player{player_index}"
+                    class:lastVerticalWall={y === inner_n - 2}
+                  />
+                {/if}
+              {:else if isHCell(y, x)}
+                {#if getHorizontalWall(rhwall, y, x) !== 0}
+                  <div
+                    class="horizontalWall player{getHorizontalWall(
+                      rhwall,
+                      y,
+                      x
+                    )}"
+                  />
+                {:else if hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
+                  <div
+                    class="ghost horizontalWall player{player_index}"
+                    class:lastHorizontalWall={x === inner_n - 2}
+                  />
+                {/if}
               {/if}
-            {:else if isVCell(y, x)}
-              {#if getVerticalWall(rvwall, y, x) !== 0}
-                <div
-                  class="verticalWall player{getVerticalWall(rvwall, y, x)}"
-                />
-              {:else if hasGhostVerticalWall(ghost_vertical_wall, y, x)}
-                <div
-                  class="ghost verticalWall player{player_index}"
-                  class:lastVerticalWall={y === inner_n - 2}
-                />
-              {/if}
-            {:else if isHCell(y, x)}
-              {#if getHorizontalWall(rhwall, y, x) !== 0}
-                <div
-                  class="horizontalWall player{getHorizontalWall(rhwall, y, x)}"
-                />
-              {:else if hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
-                <div
-                  class="ghost horizontalWall player{player_index}"
-                  class:lastHorizontalWall={x === inner_n - 2}
-                />
-              {/if}
-            {/if}
-          </div>
+            </div>
+          {/if}
         </div>
       {/each}
     </div>
@@ -270,16 +276,16 @@
   .columnMargin {
     background-color: rgb(177, 160, 146);
   }
-  .rowContainer > .columnContainer:first-child > :first-child {
+  .rowMargin:first-child > .columnMargin:first-child {
     border-radius: 100% 0 0 0;
   }
-  .rowContainer > .columnContainer:first-child > :last-child {
+  .columnContainer:first-child > .columnMargin:last-child {
     border-radius: 0 100% 0 0;
   }
-  .rowContainer > .columnContainer:last-child > :last-child {
+  .columnContainer:last-child > .columnMargin:last-child {
     border-radius: 0 0 100% 0;
   }
-  .rowContainer > .columnContainer:last-child > :first-child {
+  .columnContainer:last-child > .columnMargin:first-child {
     border-radius: 0 0 0 100%;
   }
 
