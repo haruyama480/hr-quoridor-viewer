@@ -128,7 +128,7 @@
         real_vertical_wall = real_vertical_wall_;
       } else if (isHCell(cy, cx)) {
         let real_horizontal_wall_ = Object.assign([], real_horizontal_wall);
-        if (y === game_row_size - 1) y--;
+        if (x === game_row_size - 1) x--;
         real_horizontal_wall_[y][x] = 1;
         real_horizontal_wall = real_horizontal_wall_;
       }
