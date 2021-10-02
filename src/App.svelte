@@ -16,17 +16,17 @@
 
   ghost_pawn = [...Array(game_row_size)].map(() =>
     Array(game_row_size).fill(1)
-  ); // fill 0 with size(n,n)
+  ); // size(n,n)
   ghost_pawn[0][0] = 1;
   ghost_pawn[1][1] = 1;
   ghost_vertical_wall = [...Array(game_row_size - 1)].map(() =>
     Array(game_row_size - 1).fill(1)
-  ); // fill 0 with size(n-1,n-1)
+  ); // size(n-1,n-1)
   ghost_vertical_wall[0][0] = 1;
   ghost_vertical_wall[1][1] = 1;
   ghost_horizontal_wall = [...Array(game_row_size - 1)].map(() =>
     Array(game_row_size - 1).fill(1)
-  ); // fill 0 with size(n-1,n-1)
+  ); // size(n-1,n-1)
   ghost_horizontal_wall[0][0] = 1;
   ghost_horizontal_wall[1][1] = 1;
 
