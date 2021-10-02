@@ -69,7 +69,7 @@
   }
   // VCell : where a vertical wall can be exist
   function isVCell(cy: number, cx: number): boolean {
-    return isPath(cx) && hasPCell(cy);
+    return hasPCell(cy) && isPath(cx);
   }
   function hasGhostVerticalWall(map: any, cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
@@ -81,7 +81,7 @@
   }
   // HCell : where a horizontal wall can be exist
   function isHCell(cy: number, cx: number): boolean {
-    return hasPCell(cx) && isPath(cy);
+    return isPath(cy) && hasPCell(cx);
   }
   function hasGhostHorizontalWall(map: any, cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
