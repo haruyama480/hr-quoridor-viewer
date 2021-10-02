@@ -114,8 +114,6 @@
               class="ghost horizontalWall"
               class:lastHorizontalWall={x === inner_n - 2}
             />
-          {:else}
-            <div>error</div>
           {/if}
         </div>
       {/each}
