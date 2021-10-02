@@ -3,14 +3,16 @@
   game_row_size = 5;
   $: inner_n = game_row_size * 2 + 1;
 
-  let real_pawn: number[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
+  let real_pawn: any[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
   // let real_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   let ghost_pawn: number[][];
   let ghost_vertical_wall: number[][];
   let ghost_horizontal_wall: number[][];
 
-  real_pawn = [...Array(game_row_size)].map(() => Array(game_row_size).fill(0)); // fill 0 with size(n,n)
-  real_pawn[0][0] = 1;
+  real_pawn = [...Array(game_row_size)].map(() =>
+    [...Array(game_row_size)].map(() => Object.assign({}))
+  ); // size(n,n)
+  real_pawn[0][0].key = 1;
 
   ghost_pawn = [...Array(game_row_size)].map(() =>
     Array(game_row_size).fill(1)
@@ -49,13 +51,21 @@
     const x = Math.floor((cx - 1) / 2);
     return [y, x];
   }
-  function hasRealPawn(cy: number, cx: number): boolean {
+  function hasRealPawn(map: any, cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
-    return isPCell(cx, cy) && real_pawn[y][x] === 1;
+    return isPCell(cx, cy) && Object.keys(map[y][x]).length !== 0;
   }
-  function hasGhostPawn(cy: number, cx: number): boolean {
+  function getRealPawn(map: any, cy: number, cx: number): any {
     const [y, x] = toIndex(cy, cx);
-    return isPCell(cx, cy) && ghost_pawn[y][x] === 1;
+    if (hasRealPawn(map, cy, cx)) {
+      return map[y][x];
+    } else {
+      return {};
+    }
+  }
+  function hasGhostPawn(map: any, cy: number, cx: number): boolean {
+    const [y, x] = toIndex(cy, cx);
+    return isPCell(cx, cy) && map[y][x] === 1;
   }
   function hasGhostVerticalWall(cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
@@ -82,9 +92,37 @@
   }
   function handleClick(cy: number, cx: number): any {
     return (event: any) => {
-      console.log(cx, cy, event);
+      if (!isPCell(cx, cy)) return;
+      const [y, x] = toIndex(cy, cx);
+      let real_pawn_ = [...Array(game_row_size)].map(() =>
+        [...Array(game_row_size)].map(() => Object.assign({}))
+      );
+      real_pawn_[y][x].key = 1;
+      console.log(y, x, event, real_pawn_);
+      real_pawn = real_pawn_;
     };
   }
+
+  // FOR ANIMATION
+  import { quintOut } from "svelte/easing";
+  import { crossfade } from "svelte/transition";
+  const [send, receive] = crossfade({
+    duration: (d) => Math.sqrt(d * 700),
+
+    fallback(node) {
+      const style = getComputedStyle(node);
+      const transform = style.transform === "none" ? "" : style.transform;
+
+      return {
+        duration: 6000,
+        easing: quintOut,
+        css: (t) => `
+					transform: ${transform} scale(${t});
+					opacity: ${t}
+				`,
+      };
+    },
+  });
 </script>
 
 <div class="rowContainer">
@@ -100,25 +138,30 @@
           class:columnPCell={hasPCell(x)}
           class:columnPath={isPath(x)}
           class:columnMargin={isMargin(x)}
-          class="cell"
           on:mouseenter={handleMouseEnter(y, x)}
           on:click={handleClick(y, x)}
         >
-          {#if hasRealPawn(y, x)}
-            <div class="pawn" />
-          {:else if hasGhostPawn(y, x)}
-            <div class="ghost pawn" />
-          {:else if hasGhostVerticalWall(y, x)}
-            <div
-              class="ghost verticalWall"
-              class:lastVerticalWall={y === inner_n - 2}
-            />
-          {:else if hasGhostHorizontalWall(y, x)}
-            <div
-              class="ghost horizontalWall"
-              class:lastHorizontalWall={x === inner_n - 2}
-            />
-          {/if}
+          <div class="cell" style="height: 100%; width:100%;">
+            {#if hasRealPawn(real_pawn, y, x)}
+              <div
+                class="pawn"
+                in:receive={getRealPawn(real_pawn, y, x)}
+                out:send={getRealPawn(real_pawn, y, x)}
+              />
+            {:else if hasGhostPawn(ghost_pawn, y, x)}
+              <div class="ghost pawn" />
+            {:else if hasGhostVerticalWall(y, x)}
+              <div
+                class="ghost verticalWall"
+                class:lastVerticalWall={y === inner_n - 2}
+              />
+            {:else if hasGhostHorizontalWall(y, x)}
+              <div
+                class="ghost horizontalWall"
+                class:lastHorizontalWall={x === inner_n - 2}
+              />
+            {/if}
+          </div>
         </div>
       {/each}
     </div>
@@ -158,6 +201,7 @@
     flex: 0.3 auto;
   }
   .cell {
+    position: relative;
     display: flex;
   }
 
@@ -185,11 +229,14 @@
   }
 
   .pawn {
-    margin: auto;
-    height: 85%;
-    width: 85%;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    height: 60%;
+    width: 60%;
     border-radius: 50%;
     background: #000;
+    z-index: 1;
   }
 
   .cell {
