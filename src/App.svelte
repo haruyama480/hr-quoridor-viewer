@@ -32,7 +32,7 @@
 	function isPath(i:number):boolean {
 		return i%2 === 0 && !isMargin(i);
 	}
-	function hasPCell(i:number):boolean {
+	function hasPCell(i:number):boolean { // PCell is for cell where pawn can be exists
 		return !isMargin(i) && !isPath(i);
 	}
 	function isPCell(cy:number, cx:number):boolean {
@@ -97,12 +97,12 @@
 				>
 					{#if hasGhostPawn(y,x)}
 						<div class='ghost pawn'></div>
-					{/if}
-					{#if hasGhostVerticalWall(y,x)}
+					{:else if hasGhostVerticalWall(y,x)}
 						<div class='ghost verticalWall' class:lastVerticalWall='{y===inner_n-2}'></div>
-					{/if}
-					{#if hasGhostHorizontalWall(y,x)}
+					{:else if hasGhostHorizontalWall(y,x)}
 						<div class='ghost horizontalWall' class:lastHorizontalWall='{x===inner_n-2}'></div>
+					{:else}
+						<div> error </div>
 					{/if}
 				</div>
 			{/each}
