@@ -1,54 +1,110 @@
 <script lang="ts">
+
 	export let game_row_size: number;
-
-	game_row_size=5;
 	$: inner_n = game_row_size * 2+1;
+	game_row_size=5;
 
-	function isMargin(i:number) {
+	// interface Position {
+	// 	y: number;
+	// 	x: number;
+	// }
+
+	// let real_pawn: Position[]; // i: player(1-index)
+	// let real_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
+	let ghost_pawn: number[][];
+	let ghost_vertical_wall: number[][];
+	let ghost_horizontal_wall: number[][];
+
+	ghost_pawn = [...Array(game_row_size)].map(i => Array(game_row_size).fill(0)); // fill 0 with size(n,n)
+	ghost_pawn[0][0] = 1
+	ghost_pawn[1][1] = 1
+	ghost_vertical_wall = [...Array(game_row_size)].map(i => Array(game_row_size-1).fill(0)); // fill 0 with size(n,n-1)
+	ghost_vertical_wall[0][0] = 1
+	ghost_vertical_wall[1][1] = 1
+	ghost_horizontal_wall = [...Array(game_row_size-1)].map(i => Array(game_row_size).fill(0)); // fill 0 with size(n-1,n)
+	ghost_horizontal_wall[0][0] = 1
+	ghost_horizontal_wall[1][1] = 1
+
+
+	function isMargin(i:number):boolean {
 		return i === 0 || i === inner_n - 1; // first or last
 	}
-	function isPath(i:number) {
+	function isPath(i:number):boolean {
 		return i%2 === 0 && !isMargin(i);
 	}
-	function hasCell(i:number) {
+	function hasPCell(i:number):boolean {
 		return !isMargin(i) && !isPath(i);
 	}
-	function isCell(i:number,j :number):any {
-		return hasCell(i) && hasCell(j);
+	function isPCell(cy:number, cx:number):boolean {
+		return hasPCell(cx) && hasPCell(cy);
 	}
-
-	function handleMouseEnter(i:number,j :number):any {
-		return (event) => {
-			console.log(i,j, event);
+	function toIndex(cy:number, cx:number):[number, number] {
+		// Cellは0始まりのindexに
+		// Pathも0始まりのindexに
+		// 手前のmarginは、-1になる
+		const x = Math.floor((cx-1)/2)
+		const y = Math.floor((cy-1)/2)
+		return [x,y]
+	}
+	function hasGhostPawn(cy:number, cx:number):boolean {
+		const [x,y] = toIndex(cx,cy);
+		return isPCell(cx, cy) && ghost_pawn[x][y] === 1;
+	}
+	function hasGhostVerticalWall(cy:number, cx:number):boolean {
+		const [x,y] = toIndex(cx,cy);
+		return isPath(cx) && hasPCell(cy) && ghost_vertical_wall[x][y] === 1;
+	}
+	function hasGhostHorizontalWall(cy:number, cx:number):boolean {
+		const [x,y] = toIndex(cx,cy);
+		try {
+			if (hasPCell(cx)) {
+			hasPCell(cx) && isPath(cy) && ghost_horizontal_wall[x][y] === 1;
+			}
+		} catch (err) {
+			console.log(cx, cy, x,y)
+			console.log(isMargin(cx), inner_n)
+			console.log(err)
+			return;
+		}
+		return hasPCell(cx) && isPath(cy) && ghost_horizontal_wall[x][y] === 1;
+	}
+	function handleMouseEnter(cy:number, cx:number):any {
+		return (event:any) => {
+			console.log(cx,cy,event);
 		}
 	}
-	function handleClick(i:number,j :number):any {
-		return (event) => {
-			console.log(i,j, event);
+	function handleClick(cy:number, cx:number):any {
+		return (event:any) => {
+			console.log(cx,cy,event);
 		}
 	}
 </script>
-
 
 <div class="rowContainer">
 	{#each Array.from({length:inner_n}, (_, i) => inner_n - i -1) as y}
 		<div
 			class='columnContainer'
-			class:rowMargin='{isMargin(y)}'
+			class:rowPCell='{hasPCell(y)}'
 			class:rowPath='{isPath(y)}'
-			class:row='{hasCell(y)}'
+			class:rowMargin='{isMargin(y)}'
 		>
 			{#each Array.from({length:inner_n}, (_, i) => i)  as _, x}
 				<div
-					class:columnMargin='{isMargin(x)}'
+					class:columnPCell='{hasPCell(x)}'
 					class:columnPath='{isPath(x)}'
-					class:column='{hasCell(x)}'
-					class:cell='{isCell(y,x)}'
+					class:columnMargin='{isMargin(x)}'
+					class='cell'
 					on:mouseenter={handleMouseEnter(y,x)}
 					on:click={handleClick(y,x)}
 				>
-					{#if isCell(y,x)}
-						<div class='circle'></div>
+					{#if hasGhostPawn(y,x)}
+						<div class='circle ghostPawn'></div>
+					{/if}
+					{#if hasGhostVerticalWall(y,x)}
+						<div class='circle ghostPawn'></div>
+					{/if}
+					{#if hasGhostHorizontalWall(y,x)}
+						<div class='circle ghostPawn'></div>
 					{/if}
 				</div>
 			{/each}
@@ -66,7 +122,7 @@
 	width: 100%;
 	height: 100%;
 }
-.row{
+.rowPCell{
 	flex: 1 auto;
 }
 .rowPath{
@@ -81,11 +137,8 @@
 	flex-direction: row;
 	width: 100%;
 }
-.column{
+.columnPCell{
 	flex: 1 auto;
-}
-.cell{
-	display: flex;
 }
 .columnPath {
 	flex: 0.2 auto;
@@ -93,10 +146,13 @@
 .columnMargin{
 	flex: 0.3 auto;
 }
+.cell {
+	display: flex;
+}
 
 
 /* color */
-.cell {
+.rowPCell .columnPCell{
 	background-color: rgb(161,142,128);
 }
 .rowPath, .columnPath, .rowMargin :not(.columnMargin), .columnMargin{
@@ -118,15 +174,18 @@
 .circle {
 	margin: auto;
   border-radius: 50%;
-  /* font-size: 50%; */
-	height: 90%;
-	width: 90%;
-  color:red;
   text-align: center;
   background: #000;
+}
+
+.ghostPawn {
+	height: 90%;
+	width: 90%;
+  text-align: center;
+	opacity: 0.4;
 	display: none;
 }
-.cell:hover .circle{
+div:hover>.circle{
 	display:block;
 }
 
