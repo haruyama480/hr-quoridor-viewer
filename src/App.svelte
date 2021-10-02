@@ -12,6 +12,8 @@
   let ghost_pawn: number[][];
   let ghost_vertical_wall: number[][];
   let ghost_horizontal_wall: number[][];
+  $: rvwall = real_vertical_wall; // for html
+  $: rhwall = real_horizontal_wall;
 
   real_pawn = [...Array(game_row_size)].map(() =>
     [...Array(game_row_size)].map(() => Object.assign({}))
@@ -50,9 +52,8 @@
     return i % 2 === 0 && !isMargin(i);
   }
   function toIndex(cy: number, cx: number): [number, number] {
-    // Cellは0始まりのindexに
-    // Pathも0始まりのindexに
-    // 手前のmarginは、-1になる
+    // PCell, VCell, HCellをすべて0始まりのindexに
+    // marginは、-1 や game_row_size-1 になったりする
     const y = Math.floor((cy - 1) / 2);
     const x = Math.floor((cx - 1) / 2);
     return [y, x];
@@ -193,13 +194,9 @@
                 <div class="ghost pawn" />
               {/if}
             {:else if isVCell(y, x)}
-              {#if getVerticalWall(real_vertical_wall, y, x) !== 0}
+              {#if getVerticalWall(rvwall, y, x) !== 0}
                 <div
-                  class="verticalWall player{getVerticalWall(
-                    real_vertical_wall,
-                    y,
-                    x
-                  )}"
+                  class="verticalWall player{getVerticalWall(rvwall, y, x)}"
                 />
               {:else if hasGhostVerticalWall(ghost_vertical_wall, y, x)}
                 <div
@@ -208,13 +205,9 @@
                 />
               {/if}
             {:else if isHCell(y, x)}
-              {#if getHorizontalWall(real_horizontal_wall, y, x) !== 0}
+              {#if getHorizontalWall(rhwall, y, x) !== 0}
                 <div
-                  class="horizontalWall player{getHorizontalWall(
-                    real_horizontal_wall,
-                    y,
-                    x
-                  )}"
+                  class="horizontalWall player{getHorizontalWall(rhwall, y, x)}"
                 />
               {:else if hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
                 <div
