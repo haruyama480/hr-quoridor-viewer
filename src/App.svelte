@@ -199,7 +199,7 @@
                   class:lastVerticalWall={y === inner_n - 2}
                 />
               {/if}
-            {:else if hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
+            {:else if isHCell(y, x)}
               {#if hasHorizontalWall(real_horizontal_wall, y, x)}
                 <div class="horizontalWall" />
               {:else if hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
@@ -208,7 +208,6 @@
                   class:lastHorizontalWall={x === inner_n - 2}
                 />
               {/if}
-              <div class="ghost horizontalWall" />
             {/if}
           </div>
         </div>
