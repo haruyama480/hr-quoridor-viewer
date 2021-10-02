@@ -53,24 +53,24 @@
   }
   function hasGhostPawn(cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
-    return isPCell(cx, cy) && ghost_pawn[x][y] === 1;
+    return isPCell(cx, cy) && ghost_pawn[y][x] === 1;
   }
   function hasGhostVerticalWall(cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
     if (y === game_row_size - 1) {
-      return isPath(cx) && hasPCell(cy) && ghost_vertical_wall[x][y - 1] === 1;
+      return isPath(cx) && hasPCell(cy) && ghost_vertical_wall[y - 1][x] === 1;
     } else {
-      return isPath(cx) && hasPCell(cy) && ghost_vertical_wall[x][y] === 1;
+      return isPath(cx) && hasPCell(cy) && ghost_vertical_wall[y][x] === 1;
     }
   }
   function hasGhostHorizontalWall(cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
     if (x === game_row_size - 1) {
       return (
-        hasPCell(cx) && isPath(cy) && ghost_horizontal_wall[x - 1][y] === 1
+        hasPCell(cx) && isPath(cy) && ghost_horizontal_wall[y][x - 1] === 1
       );
     } else {
-      return hasPCell(cx) && isPath(cy) && ghost_horizontal_wall[x][y] === 1;
+      return hasPCell(cx) && isPath(cy) && ghost_horizontal_wall[y][x] === 1;
     }
   }
   function handleMouseEnter(cy: number, cx: number): any {
