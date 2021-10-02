@@ -31,23 +31,23 @@
 
 
 <div class="rowContainer">
-	{#each Array(inner_n) as _, i}
+	{#each Array.from({length:inner_n}, (_, i) => inner_n - i -1) as y}
 		<div
 			class='columnContainer'
-			class:rowMargin='{isMargin(i)}'
-			class:rowPath='{isPath(i)}'
-			class:row='{hasCell(i)}'
+			class:rowMargin='{isMargin(y)}'
+			class:rowPath='{isPath(y)}'
+			class:row='{hasCell(y)}'
 		>
-			{#each Array(inner_n) as _, j}
+			{#each Array.from({length:inner_n}, (_, i) => i)  as _, x}
 				<div
-					class:columnMargin='{isMargin(j)}'
-					class:columnPath='{isPath(j)}'
-					class:column='{hasCell(j)}'
-					class:cell='{isCell(i,j)}'
-					on:mouseenter={handleMouseEnter(i,j)}
-					on:click={handleClick(i,j)}
+					class:columnMargin='{isMargin(x)}'
+					class:columnPath='{isPath(x)}'
+					class:column='{hasCell(x)}'
+					class:cell='{isCell(y,x)}'
+					on:mouseenter={handleMouseEnter(y,x)}
+					on:click={handleClick(y,x)}
 				>
-					{#if isCell(i,j)}
+					{#if isCell(y,x)}
 						<div class='circle'></div>
 					{/if}
 				</div>
