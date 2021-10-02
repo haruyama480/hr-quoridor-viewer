@@ -1,8 +1,8 @@
 <script lang="ts">
 
 	export let game_row_size: number;
-	$: inner_n = game_row_size * 2+1;
 	game_row_size=5;
+	$: inner_n = game_row_size * 2+1;
 
 	// interface Position {
 	// 	y: number;
@@ -18,10 +18,10 @@
 	ghost_pawn = [...Array(game_row_size)].map(i => Array(game_row_size).fill(1)); // fill 0 with size(n,n)
 	ghost_pawn[0][0] = 1
 	ghost_pawn[1][1] = 1
-	ghost_vertical_wall = [...Array(game_row_size)].map(i => Array(game_row_size-1).fill(1)); // fill 0 with size(n,n-1)
+	ghost_vertical_wall = [...Array(game_row_size-1)].map(i => Array(game_row_size-1).fill(1)); // fill 0 with size(n-1,n-1)
 	ghost_vertical_wall[0][0] = 1
 	ghost_vertical_wall[1][1] = 1
-	ghost_horizontal_wall = [...Array(game_row_size-1)].map(i => Array(game_row_size).fill(1)); // fill 0 with size(n-1,n)
+	ghost_horizontal_wall = [...Array(game_row_size-1)].map(i => Array(game_row_size-1).fill(1)); // fill 0 with size(n-1,n-1)
 	ghost_horizontal_wall[0][0] = 1
 	ghost_horizontal_wall[1][1] = 1
 
@@ -42,31 +42,29 @@
 		// Cellは0始まりのindexに
 		// Pathも0始まりのindexに
 		// 手前のmarginは、-1になる
-		const x = Math.floor((cx-1)/2)
 		const y = Math.floor((cy-1)/2)
-		return [x,y]
+		const x = Math.floor((cx-1)/2)
+		return [y,x]
 	}
 	function hasGhostPawn(cy:number, cx:number):boolean {
-		const [x,y] = toIndex(cx,cy);
+		const [y,x] = toIndex(cy,cx);
 		return isPCell(cx, cy) && ghost_pawn[x][y] === 1;
 	}
 	function hasGhostVerticalWall(cy:number, cx:number):boolean {
-		const [x,y] = toIndex(cx,cy);
-		return isPath(cx) && hasPCell(cy) && ghost_vertical_wall[x][y] === 1;
+		const [y,x] = toIndex(cy,cx);
+		if (y === game_row_size-1) {
+			return isPath(cx) && hasPCell(cy) && ghost_vertical_wall[x][y-1] === 1;
+		} else {
+			return isPath(cx) && hasPCell(cy) && ghost_vertical_wall[x][y] === 1;
+		}
 	}
 	function hasGhostHorizontalWall(cy:number, cx:number):boolean {
-		const [x,y] = toIndex(cx,cy);
-		try {
-			if (hasPCell(cx)) {
-			hasPCell(cx) && isPath(cy) && ghost_horizontal_wall[x][y] === 1;
-			}
-		} catch (err) {
-			console.log(cx, cy, x,y)
-			console.log(isMargin(cx), inner_n)
-			console.log(err)
-			return;
+		const [y,x] = toIndex(cy,cx);
+		if (x === game_row_size-1) {
+			return hasPCell(cx) && isPath(cy) && ghost_horizontal_wall[x-1][y] === 1;
+		} else {
+			return hasPCell(cx) && isPath(cy) && ghost_horizontal_wall[x][y] === 1;
 		}
-		return hasPCell(cx) && isPath(cy) && ghost_horizontal_wall[x][y] === 1;
 	}
 	function handleMouseEnter(cy:number, cx:number):any {
 		return (event:any) => {
@@ -101,10 +99,10 @@
 						<div class='ghost pawn'></div>
 					{/if}
 					{#if hasGhostVerticalWall(y,x)}
-						<div class='ghost verticalWall'></div>
+						<div class='ghost verticalWall' class:lastVerticalWall='{y===inner_n-2}'></div>
 					{/if}
 					{#if hasGhostHorizontalWall(y,x)}
-						<div class='ghost horizontalWall'></div>
+						<div class='ghost horizontalWall' class:lastHorizontalWall='{x===inner_n-2}'></div>
 					{/if}
 				</div>
 			{/each}
@@ -199,6 +197,14 @@
 	width: 220%;
 	bottom: 7%;
 	height: 86%;
+}
+.verticalWall.lastVerticalWall {
+	bottom: unset;
+	top: 0%;
+}
+.horizontalWall.lastHorizontalWall {
+	left: unset;
+	right: 0%;
 }
 
 .ghost {
