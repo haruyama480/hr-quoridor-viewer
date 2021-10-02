@@ -86,12 +86,9 @@
     return isVCell(cy, cx) && map[y][x] === 1;
   }
   function hasGhostVerticalWall(map: any, cy: number, cx: number): boolean {
-    const [y, x] = toIndex(cy, cx);
-    if (y === game_row_size - 1) {
-      return isVCell(cy, cx) && map[y - 1][x] === 1;
-    } else {
-      return isVCell(cy, cx) && map[y][x] === 1;
-    }
+    let [y, x] = toIndex(cy, cx);
+    if (y === game_row_size - 1) y--;
+    return isVCell(cy, cx) && map[y][x] === 1;
   }
 
   // HCell : where a horizontal wall can be exist
@@ -104,12 +101,9 @@
     return isHCell(cy, cx) && map[y][x] === 1;
   }
   function hasGhostHorizontalWall(map: any, cy: number, cx: number): boolean {
-    const [y, x] = toIndex(cy, cx);
-    if (x === game_row_size - 1) {
-      return isHCell(cy, cx) && map[y][x - 1] === 1;
-    } else {
-      return isHCell(cy, cx) && map[y][x] === 1;
-    }
+    let [y, x] = toIndex(cy, cx);
+    if (x === game_row_size - 1) x--;
+    return isHCell(cy, cx) && map[y][x] === 1;
   }
 
   // handler
