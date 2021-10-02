@@ -44,6 +44,7 @@
     const x = Math.floor((cx - 1) / 2);
     return [y, x];
   }
+
   // PCell : where a pawn can be exist
   function hasPCell(i: number): boolean {
     return !isMargin(i) && !isPath(i);
@@ -67,6 +68,7 @@
     const [y, x] = toIndex(cy, cx);
     return isPCell(cx, cy) && map[y][x] === 1;
   }
+
   // VCell : where a vertical wall can be exist
   function isVCell(cy: number, cx: number): boolean {
     return hasPCell(cy) && isPath(cx);
@@ -79,6 +81,7 @@
       return isVCell(cy, cx) && map[y][x] === 1;
     }
   }
+
   // HCell : where a horizontal wall can be exist
   function isHCell(cy: number, cx: number): boolean {
     return isPath(cy) && hasPCell(cx);
@@ -91,6 +94,8 @@
       return isHCell(cy, cx) && map[y][x] === 1;
     }
   }
+
+  // handler
   function handleMouseEnter(cy: number, cx: number): any {
     return (event: any) => {
       console.log(cx, cy, event);
