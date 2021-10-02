@@ -44,8 +44,8 @@
     const x = Math.floor((cx - 1) / 2);
     return [y, x];
   }
+  // PCell : where a pawn can be exist
   function hasPCell(i: number): boolean {
-    // PCell is for cell where pawn can be exists
     return !isMargin(i) && !isPath(i);
   }
   function isPCell(cy: number, cx: number): boolean {
@@ -67,20 +67,28 @@
     const [y, x] = toIndex(cy, cx);
     return isPCell(cx, cy) && map[y][x] === 1;
   }
+  // VCell : where a vertical wall can be exist
+  function isVCell(cy: number, cx: number): boolean {
+    return isPath(cx) && hasPCell(cy);
+  }
   function hasGhostVerticalWall(map: any, cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
     if (y === game_row_size - 1) {
-      return isPath(cx) && hasPCell(cy) && map[y - 1][x] === 1;
+      return isVCell(cy, cx) && map[y - 1][x] === 1;
     } else {
-      return isPath(cx) && hasPCell(cy) && map[y][x] === 1;
+      return isVCell(cy, cx) && map[y][x] === 1;
     }
+  }
+  // HCell : where a horizontal wall can be exist
+  function isHCell(cy: number, cx: number): boolean {
+    return hasPCell(cx) && isPath(cy);
   }
   function hasGhostHorizontalWall(map: any, cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
     if (x === game_row_size - 1) {
-      return hasPCell(cx) && isPath(cy) && map[y][x - 1] === 1;
+      return isHCell(cy, cx) && map[y][x - 1] === 1;
     } else {
-      return hasPCell(cx) && isPath(cy) && map[y][x] === 1;
+      return isHCell(cy, cx) && map[y][x] === 1;
     }
   }
   function handleMouseEnter(cy: number, cx: number): any {
