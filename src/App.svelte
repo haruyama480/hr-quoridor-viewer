@@ -3,16 +3,14 @@
   game_row_size = 5;
   $: inner_n = game_row_size * 2 + 1;
 
-  // interface Position {
-  // 	y: number;
-  // 	x: number;
-  // }
-
-  // let real_pawn: Position[]; // i: player(1-index)
+  let real_pawn: number[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
   // let real_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   let ghost_pawn: number[][];
   let ghost_vertical_wall: number[][];
   let ghost_horizontal_wall: number[][];
+
+  real_pawn = [...Array(game_row_size)].map(() => Array(game_row_size).fill(0)); // fill 0 with size(n,n)
+  real_pawn[0][0] = 1;
 
   ghost_pawn = [...Array(game_row_size)].map(() =>
     Array(game_row_size).fill(1)
@@ -50,6 +48,10 @@
     const y = Math.floor((cy - 1) / 2);
     const x = Math.floor((cx - 1) / 2);
     return [y, x];
+  }
+  function hasRealPawn(cy: number, cx: number): boolean {
+    const [y, x] = toIndex(cy, cx);
+    return isPCell(cx, cy) && real_pawn[y][x] === 1;
   }
   function hasGhostPawn(cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
@@ -102,7 +104,9 @@
           on:mouseenter={handleMouseEnter(y, x)}
           on:click={handleClick(y, x)}
         >
-          {#if hasGhostPawn(y, x)}
+          {#if hasRealPawn(y, x)}
+            <div class="pawn" />
+          {:else if hasGhostPawn(y, x)}
             <div class="ghost pawn" />
           {:else if hasGhostVerticalWall(y, x)}
             <div
