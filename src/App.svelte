@@ -36,13 +36,6 @@
   function isPath(i: number): boolean {
     return i % 2 === 0 && !isMargin(i);
   }
-  function hasPCell(i: number): boolean {
-    // PCell is for cell where pawn can be exists
-    return !isMargin(i) && !isPath(i);
-  }
-  function isPCell(cy: number, cx: number): boolean {
-    return hasPCell(cx) && hasPCell(cy);
-  }
   function toIndex(cy: number, cx: number): [number, number] {
     // Cellは0始まりのindexに
     // Pathも0始まりのindexに
@@ -50,6 +43,13 @@
     const y = Math.floor((cy - 1) / 2);
     const x = Math.floor((cx - 1) / 2);
     return [y, x];
+  }
+  function hasPCell(i: number): boolean {
+    // PCell is for cell where pawn can be exists
+    return !isMargin(i) && !isPath(i);
+  }
+  function isPCell(cy: number, cx: number): boolean {
+    return hasPCell(cx) && hasPCell(cy);
   }
   function hasRealPawn(map: any, cy: number, cx: number): boolean {
     const [y, x] = toIndex(cy, cx);
