@@ -1,49 +1,17 @@
 <script lang="ts">
-  let game_row_size: number;
-  game_row_size = 5;
+  export let game_row_size = 5;
+  export let player_index = 1;
   $: inner_n = game_row_size * 2 + 1;
-  let player_index: number;
-  player_index = 1;
 
-  let real_pawn: any[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
-  let last_pawn_position: any = {}; // key:player_id, value [y,x]
-  let real_vertical_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
-  let real_horizontal_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
-  let ghost_pawn: number[][];
-  let ghost_vertical_wall: number[][];
-  let ghost_horizontal_wall: number[][];
+  export let real_pawn: any[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
+  export let last_pawn_position: any = {}; // key:player_id, value [y,x]
+  export let real_vertical_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
+  export let real_horizontal_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
+  export let ghost_pawn: number[][];
+  export let ghost_vertical_wall: number[][];
+  export let ghost_horizontal_wall: number[][];
   $: rvwall = real_vertical_wall; // for html
   $: rhwall = real_horizontal_wall;
-
-  real_pawn = [...Array(game_row_size)].map(() =>
-    [...Array(game_row_size)].map(() => Object.assign({}))
-  ); // size(n,n)
-  real_pawn[0][0].key = 1;
-  real_pawn[2][2].key = 2;
-  last_pawn_position[1] = [0, 0];
-  last_pawn_position[2] = [2, 2];
-
-  real_vertical_wall = [...Array(game_row_size - 1)].map(() =>
-    Array(game_row_size - 1).fill(0)
-  ); // size(n-1,n-1)
-  real_horizontal_wall = [...Array(game_row_size - 1)].map(() =>
-    Array(game_row_size - 1).fill(0)
-  ); // size(n-1,n-1)
-  ghost_pawn = [...Array(game_row_size)].map(() =>
-    Array(game_row_size).fill(1)
-  ); // size(n,n)
-  ghost_pawn[0][0] = 1;
-  ghost_pawn[1][1] = 1;
-  ghost_vertical_wall = [...Array(game_row_size - 1)].map(() =>
-    Array(game_row_size - 1).fill(1)
-  ); // size(n-1,n-1)
-  ghost_vertical_wall[0][0] = 1;
-  ghost_vertical_wall[1][1] = 1;
-  ghost_horizontal_wall = [...Array(game_row_size - 1)].map(() =>
-    Array(game_row_size - 1).fill(1)
-  ); // size(n-1,n-1)
-  ghost_horizontal_wall[0][0] = 1;
-  ghost_horizontal_wall[1][1] = 1;
 
   function isMargin(i: number): boolean {
     return i === 0 || i === inner_n - 1; // first or last
@@ -114,33 +82,24 @@
   }
 
   // handler
-  function handleMouseEnter(cy: number, cx: number): any {
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
+  function hoverCell(cy: number, cx: number): any {
     return (event: any) => {
-      console.log(cx, cy, event);
+      dispatch("hoverCell", {
+        event,
+        cx,
+        cy,
+      });
     };
   }
-  function handleClick(cy: number, cx: number): any {
+  function clickCell(cy: number, cx: number): any {
     return (event: any) => {
-      let [y, x] = toIndex(cy, cx);
-      if (isPCell(cy, cx)) {
-        let real_pawn_ = JSON.parse(JSON.stringify(real_pawn)); // deep copy
-        const [prey, prex] = last_pawn_position[player_index];
-        real_pawn_[prey][prex] = {};
-        real_pawn_[y][x].key = player_index;
-        real_pawn = real_pawn_;
-        last_pawn_position[player_index] = [y, x];
-      } else if (isVCell(cy, cx)) {
-        let real_vertical_wall_ = Object.assign([], real_vertical_wall);
-        if (y === game_row_size - 1) y--;
-        real_vertical_wall_[y][x] = player_index;
-        real_vertical_wall = real_vertical_wall_;
-      } else if (isHCell(cy, cx)) {
-        let real_horizontal_wall_ = Object.assign([], real_horizontal_wall);
-        if (x === game_row_size - 1) x--;
-        real_horizontal_wall_[y][x] = player_index;
-        real_horizontal_wall = real_horizontal_wall_;
-      }
-      player_index = player_index === 1 ? 2 : 1;
+      dispatch("clickCell", {
+        event,
+        cx,
+        cy,
+      });
     };
   }
 
@@ -179,8 +138,8 @@
           class:columnPCell={hasPCell(x)}
           class:columnPath={isPath(x)}
           class:columnMargin={isMargin(x)}
-          on:mouseenter={handleMouseEnter(y, x)}
-          on:click={handleClick(y, x)}
+          on:mouseenter={hoverCell(y, x)}
+          on:click={clickCell(y, x)}
         >
           {#if !isMargin(y) && !isMargin(x)}
             <div class="cell" style="height: 100%; width:100%;">
