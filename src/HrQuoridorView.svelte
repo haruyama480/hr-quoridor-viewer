@@ -11,9 +11,9 @@
 
   export let pawn_map: Cell[][];
   export let vertical_wall_map: Cell[][];
-  export let horizontal_wall: Cell[][];
+  export let horizontal_wall_map: Cell[][];
   $: vwall = vertical_wall_map; // for html
-  $: hwall = horizontal_wall;
+  $: hwall = horizontal_wall_map;
 
   // HANDLER
   const dispatch = createEventDispatcher();

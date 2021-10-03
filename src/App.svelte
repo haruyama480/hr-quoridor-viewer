@@ -10,7 +10,7 @@
 
   let pawn_map: Cell[][];
   let vertical_wall_map: Cell[][];
-  let horizontal_wall: Cell[][];
+  let horizontal_wall_map: Cell[][];
 
   pawn_map = [...Array(game_row_size)].map(() =>
     Array(game_row_size).fill(Ghost)
@@ -21,7 +21,7 @@
   vertical_wall_map = [...Array(game_row_size - 1)].map(() =>
     Array(game_row_size - 1).fill(Ghost)
   ); // size(n-1,n-1)
-  horizontal_wall = [...Array(game_row_size - 1)].map(() =>
+  horizontal_wall_map = [...Array(game_row_size - 1)].map(() =>
     Array(game_row_size - 1).fill(Ghost)
   ); // size(n-1,n-1)
 
@@ -54,21 +54,21 @@
       ) {
         return; // no change;
       }
-      let vertical_wall__map = Object.assign([], vertical_wall_map);
+      let vertical_wall_map_ = Object.assign([], vertical_wall_map);
       if (y === game_row_size - 1) y--;
-      vertical_wall__map[y][x] = Piece(current_player_id, false);
-      vertical_wall_map = vertical_wall__map;
+      vertical_wall_map_[y][x] = Piece(current_player_id, false);
+      vertical_wall_map = vertical_wall_map_;
     } else if (ql.isHCell(cy, cx)) {
       if (
-        horizontal_wall[y][x].kind === "piece" &&
-        horizontal_wall[y][x].player_id === current_player_id
+        horizontal_wall_map[y][x].kind === "piece" &&
+        horizontal_wall_map[y][x].player_id === current_player_id
       ) {
         return; // no change;
       }
-      let horizontal_wall_ = Object.assign([], horizontal_wall);
+      let horizontal_wall_map_ = Object.assign([], horizontal_wall_map);
       if (x === game_row_size - 1) x--;
-      horizontal_wall_[y][x] = Piece(current_player_id, false);
-      horizontal_wall = horizontal_wall_;
+      horizontal_wall_map_[y][x] = Piece(current_player_id, false);
+      horizontal_wall_map = horizontal_wall_map_;
     }
     current_player_id = (current_player_id + 1) % game_player_size;
   }
@@ -80,7 +80,7 @@
     {current_player_id}
     {pawn_map}
     {vertical_wall_map}
-    {horizontal_wall}
+    {horizontal_wall_map}
     on:clickCell={clickCell}
   />
 </div>
