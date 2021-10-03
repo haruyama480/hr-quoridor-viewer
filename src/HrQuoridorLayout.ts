@@ -34,7 +34,6 @@ export class HrQuoridorLayout {
     } else {
       return 0;
     }
-    return this.isPCell(cx, cy) && Object.keys(map[y][x]).length !== 0;
   }
   public hasGhostPawn(map: number[][], cy: number, cx: number): boolean {
     const [y, x] = this.toIndex(cy, cx);
