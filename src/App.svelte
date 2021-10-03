@@ -64,6 +64,7 @@
       real_horizontal_wall_[y][x] = current_player_id;
       real_horizontal_wall = real_horizontal_wall_;
     }
+    // FIXME: switch only when state changed
     current_player_id =
       current_player_id + 1 > game_player_size ? 1 : current_player_id + 1;
   }
