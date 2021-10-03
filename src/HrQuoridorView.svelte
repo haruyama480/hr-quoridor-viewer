@@ -4,7 +4,7 @@
   import { crossfade } from "svelte/transition";
 
   export let game_row_size = 5;
-  export let player_index = 1;
+  export let current_player_id = 1;
   $: inner_n = game_row_size * 2 + 1;
 
   export let real_pawn: any[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
@@ -159,7 +159,7 @@
                   />
                 {:else if hasGhostVerticalWall(ghost_vertical_wall, y, x)}
                   <div
-                    class="ghost verticalWall player{player_index}"
+                    class="ghost verticalWall player{current_player_id}"
                     class:lastVerticalWall={y === inner_n - 2}
                   />
                 {/if}
@@ -174,7 +174,7 @@
                   />
                 {:else if hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
                   <div
-                    class="ghost horizontalWall player{player_index}"
+                    class="ghost horizontalWall player{current_player_id}"
                     class:lastHorizontalWall={x === inner_n - 2}
                   />
                 {/if}

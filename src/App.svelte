@@ -2,7 +2,8 @@
   import HrQuoridorView from "./HrQuoridorView.svelte";
 
   const game_row_size = 9;
-  let player_index = 1;
+  const game_player_size = 2;
+  let current_player_id = 1; // 1-index
 
   let real_pawn: any[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
   let last_pawn_position: any = {}; // key:player_id, value [y,x]
@@ -79,30 +80,31 @@
     let [y, x] = toIndex(cy, cx);
     if (isPCell(cy, cx)) {
       let real_pawn_ = JSON.parse(JSON.stringify(real_pawn)); // deep copy
-      const [prey, prex] = last_pawn_position[player_index];
+      const [prey, prex] = last_pawn_position[current_player_id];
       real_pawn_[prey][prex] = {};
-      real_pawn_[y][x].key = player_index;
+      real_pawn_[y][x].key = current_player_id;
       real_pawn = real_pawn_;
-      last_pawn_position[player_index] = [y, x];
+      last_pawn_position[current_player_id] = [y, x];
     } else if (isVCell(cy, cx)) {
       let real_vertical_wall_ = Object.assign([], real_vertical_wall);
       if (y === game_row_size - 1) y--;
-      real_vertical_wall_[y][x] = player_index;
+      real_vertical_wall_[y][x] = current_player_id;
       real_vertical_wall = real_vertical_wall_;
     } else if (isHCell(cy, cx)) {
       let real_horizontal_wall_ = Object.assign([], real_horizontal_wall);
       if (x === game_row_size - 1) x--;
-      real_horizontal_wall_[y][x] = player_index;
+      real_horizontal_wall_[y][x] = current_player_id;
       real_horizontal_wall = real_horizontal_wall_;
     }
-    player_index = player_index === 1 ? 2 : 1;
+    current_player_id =
+      current_player_id + 1 > game_player_size ? 1 : current_player_id + 1;
   }
 </script>
 
 <div style="height: 500px; width:500px; margin: 0px; padding: 0px;">
   <HrQuoridorView
     {game_row_size}
-    {player_index}
+    {current_player_id}
     {real_pawn}
     {last_pawn_position}
     {real_vertical_wall}
