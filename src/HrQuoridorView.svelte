@@ -20,16 +20,16 @@
 
   // HANDLER
   const dispatch = createEventDispatcher();
-  function hoverCell(cy: number, cx: number): any {
-    return (event: any) => {
+  function hoverCell(cy: number, cx: number): () => void {
+    return () => {
       dispatch("hoverCell", {
         cx,
         cy,
       });
     };
   }
-  function clickCell(cy: number, cx: number): any {
-    return (event: any) => {
+  function clickCell(cy: number, cx: number): () => void {
+    return () => {
       dispatch("clickCell", {
         cx,
         cy,

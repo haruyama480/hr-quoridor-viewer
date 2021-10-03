@@ -44,7 +44,8 @@
   ghost_horizontal_wall[0][0] = 1;
   ghost_horizontal_wall[1][1] = 1;
 
-  function clickCell(event: any): any {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function clickCell(event: any): void {
     const cy = event.detail.cy;
     const cx = event.detail.cx;
     let [y, x] = ql.toIndex(cy, cx);
