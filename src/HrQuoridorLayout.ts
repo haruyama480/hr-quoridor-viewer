@@ -49,11 +49,13 @@ class HrQuoridorLayout {
     return this.hasPCell(cy) && this.isPath(cx);
   }
   public getVerticalWall(map: any, cy: number, cx: number): number {
+    // eslint-disable-next-line prefer-const
     let [y, x] = this.toIndex(cy, cx);
     if (!this.isVCell(cy, cx) || y === this.game_size - 1) return 0;
     return map[y][x];
   }
   public hasGhostVerticalWall(map: any, cy: number, cx: number): boolean {
+    // eslint-disable-next-line prefer-const
     let [y, x] = this.toIndex(cy, cx);
     if (y === this.game_size - 1) y--;
     return this.isVCell(cy, cx) && map[y][x] === 1;
@@ -64,11 +66,13 @@ class HrQuoridorLayout {
     return this.isPath(cy) && this.hasPCell(cx);
   }
   public getHorizontalWall(map: any, cy: number, cx: number): number {
+    // eslint-disable-next-line prefer-const
     let [y, x] = this.toIndex(cy, cx);
     if (!this.isHCell(cy, cx) || x === this.game_size - 1) return 0;
     return map[y][x];
   }
   public hasGhostHorizontalWall(map: any, cy: number, cx: number): boolean {
+    // eslint-disable-next-line prefer-const
     let [y, x] = this.toIndex(cy, cx);
     if (x === this.game_size - 1) x--;
     return this.isHCell(cy, cx) && map[y][x] === 1;
