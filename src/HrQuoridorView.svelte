@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
+  import { quintOut } from "svelte/easing";
+  import { crossfade } from "svelte/transition";
+
   export let game_row_size = 5;
   export let player_index = 1;
   $: inner_n = game_row_size * 2 + 1;
@@ -81,13 +85,11 @@
     return isHCell(cy, cx) && map[y][x] === 1;
   }
 
-  // handler
-	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
+  // HANDLER
+  const dispatch = createEventDispatcher();
   function hoverCell(cy: number, cx: number): any {
     return (event: any) => {
       dispatch("hoverCell", {
-        event,
         cx,
         cy,
       });
@@ -96,16 +98,13 @@
   function clickCell(cy: number, cx: number): any {
     return (event: any) => {
       dispatch("clickCell", {
-        event,
         cx,
         cy,
       });
     };
   }
 
-  // FOR ANIMATION
-  import { quintOut } from "svelte/easing";
-  import { crossfade } from "svelte/transition";
+  // ANIMATION
   const [send, receive] = crossfade({
     duration: (d) => Math.sqrt(d * 700),
 
