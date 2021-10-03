@@ -38,7 +38,7 @@ export class HrQuoridorLayout {
   public isPCell(cy: number, cx: number): boolean {
     return this.hasPCell(cx) && this.hasPCell(cy);
   }
-  public getPawn(map: PCellMap, cy: number, cx: number): Cell {
+  public getPawn(map: Cell[][], cy: number, cx: number): Cell {
     const [y, x] = this.toIndex(cy, cx);
     if (this.isPCell(cy, cx)) {
       return map[y][x];

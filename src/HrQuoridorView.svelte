@@ -9,7 +9,7 @@
   export let option_same_wall_color = false;
   const ql = new HrQuoridorLayout(game_row_size);
 
-  export let real_pawn: Cell[][]; // (y,x):位置 value:pawnのplayer_id(ex, 0-1) -1のとき非表示
+  export let pawn_map: Cell[][]; // (y,x):位置 value:pawnのplayer_id(ex, 0-1) -1のとき非表示
   export let real_vertical_wall: number[][]; // (y,x):位置 value:色 -1のとき非表示
   export let real_horizontal_wall: number[][]; // (y,x):位置 value:色 -1のとき非表示
   export let ghost_vertical_wall: number[][];
@@ -75,13 +75,13 @@
           {#if !ql.isMargin(y) && !ql.isMargin(x)}
             <div class="cell" style="height: 100%; width:100%;">
               {#if ql.isPCell(y, x)}
-                {#if ql.getPawn(real_pawn, y, x).kind === "piece"}
+                {#if ql.getPawn(pawn_map, y, x).kind === "piece"}
                   <div
-                    class="pawn player{ql.getPawn(real_pawn, y, x).player_id}"
-                    in:receive={{ key: ql.getPawn(real_pawn, y, x).player_id }}
-                    out:send={{ key: ql.getPawn(real_pawn, y, x).player_id }}
+                    class="pawn player{ql.getPawn(pawn_map, y, x).player_id}"
+                    in:receive={{ key: ql.getPawn(pawn_map, y, x).player_id }}
+                    out:send={{ key: ql.getPawn(pawn_map, y, x).player_id }}
                   />
-                {:else if ql.getPawn(real_pawn, y, x).kind === "ghost"}
+                {:else if ql.getPawn(pawn_map, y, x).kind === "ghost"}
                   <div class="ghost pawn player{current_player_id}" />
                 {/if}
               {:else if ql.isVCell(y, x)}
