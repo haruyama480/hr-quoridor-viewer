@@ -11,9 +11,9 @@
 
   export let pawn_map: Cell[][];
   export let vertical_wall_map: Cell[][];
-  export let real_horizontal_wall: Cell[][];
+  export let horizontal_wall: Cell[][];
   $: vwall = vertical_wall_map; // for html
-  $: rhwall = real_horizontal_wall;
+  $: hwall = horizontal_wall;
 
   // HANDLER
   const dispatch = createEventDispatcher();
@@ -104,16 +104,16 @@
                   />
                 {/if}
               {:else if ql.isHCell(y, x)}
-                {#if ql.getHorizontalWall(rhwall, y, x).kind === "piece"}
+                {#if ql.getHorizontalWall(hwall, y, x).kind === "piece"}
                   <div
                     class="horizontalWall"
-                    class:player0={ql.getHorizontalWall(rhwall, y, x)
+                    class:player0={ql.getHorizontalWall(hwall, y, x)
                       .player_id === 0 || option_same_wall_color}
-                    class:player1={ql.getHorizontalWall(rhwall, y, x)
+                    class:player1={ql.getHorizontalWall(hwall, y, x)
                       .player_id === 1 && !option_same_wall_color}
                     transition:scale
                   />
-                {:else if ql.getHorizontalWall(rhwall, y, x).kind === "ghost"}
+                {:else if ql.getHorizontalWall(hwall, y, x).kind === "ghost"}
                   <div
                     class="ghost horizontalWall"
                     class:player0={current_player_id === 0 ||
