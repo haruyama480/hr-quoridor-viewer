@@ -8,10 +8,9 @@
 
   let current_player_id = 0; // 0-index
 
-  let pawn_map: Cell[][]; // (y,x):位置 value:pawnのplayer_id(ex, 0,1) -1のとき非表示
-  let vertical_wall_map: Cell[][]; // (y,x):位置 value:色 0のとき非表示
-  let real_horizontal_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
-  let ghost_horizontal_wall: number[][];
+  let pawn_map: Cell[][];
+  let vertical_wall_map: Cell[][];
+  let real_horizontal_wall: Cell[][];
 
   pawn_map = [...Array(game_row_size)].map(() =>
     Array(game_row_size).fill(Ghost)
@@ -23,10 +22,7 @@
     Array(game_row_size - 1).fill(Ghost)
   ); // size(n-1,n-1)
   real_horizontal_wall = [...Array(game_row_size - 1)].map(() =>
-    Array(game_row_size - 1).fill(-1)
-  ); // size(n-1,n-1)
-  ghost_horizontal_wall = [...Array(game_row_size - 1)].map(() =>
-    Array(game_row_size - 1).fill(1)
+    Array(game_row_size - 1).fill(Ghost)
   ); // size(n-1,n-1)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -53,7 +49,7 @@
     } else if (ql.isHCell(cy, cx)) {
       let real_horizontal_wall_ = Object.assign([], real_horizontal_wall);
       if (x === game_row_size - 1) x--;
-      real_horizontal_wall_[y][x] = current_player_id;
+      real_horizontal_wall_[y][x] = Piece(current_player_id, false);
       real_horizontal_wall = real_horizontal_wall_;
     }
     // FIXME: switch only when state changed
@@ -68,7 +64,6 @@
     {pawn_map}
     {vertical_wall_map}
     {real_horizontal_wall}
-    {ghost_horizontal_wall}
     on:clickCell={clickCell}
   />
 </div>

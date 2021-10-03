@@ -11,8 +11,7 @@
 
   export let pawn_map: Cell[][];
   export let vertical_wall_map: Cell[][];
-  export let real_horizontal_wall: number[][]; // (y,x):位置 value:色 -1のとき非表示
-  export let ghost_horizontal_wall: number[][];
+  export let real_horizontal_wall: Cell[][];
   $: vwall = vertical_wall_map; // for html
   $: rhwall = real_horizontal_wall;
 
@@ -105,16 +104,16 @@
                   />
                 {/if}
               {:else if ql.isHCell(y, x)}
-                {#if ql.getHorizontalWall(rhwall, y, x) !== -1}
+                {#if ql.getHorizontalWall(rhwall, y, x).kind === "piece"}
                   <div
                     class="horizontalWall"
-                    class:player0={ql.getHorizontalWall(rhwall, y, x) === 0 ||
-                      option_same_wall_color}
-                    class:player1={ql.getHorizontalWall(rhwall, y, x) === 1 &&
-                      !option_same_wall_color}
+                    class:player0={ql.getHorizontalWall(rhwall, y, x)
+                      .player_id === 0 || option_same_wall_color}
+                    class:player1={ql.getHorizontalWall(rhwall, y, x)
+                      .player_id === 1 && !option_same_wall_color}
                     transition:scale
                   />
-                {:else if ql.hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
+                {:else if ql.getHorizontalWall(rhwall, y, x).kind === "ghost"}
                   <div
                     class="ghost horizontalWall"
                     class:player0={current_player_id === 0 ||
