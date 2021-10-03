@@ -162,13 +162,13 @@
 
   /* color */
   .rowPCell .columnPCell {
-    background-color: rgb(161, 142, 128);
+    background-color: rgb(152 177 191);
   }
   .rowPath,
   .columnPath,
   .rowMargin :not(.columnMargin),
   .columnMargin {
-    background-color: rgb(177, 160, 146);
+    background-color: rgb(177 196 207);
   }
   .rowMargin:first-child > .columnMargin:first-child {
     border-radius: 100% 0 0 0;
