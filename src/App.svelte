@@ -7,23 +7,7 @@
   const ql = new HrQuoridorLayout(game_row_size);
 
   let current_player_id = 0; // 0-index
-
-  let pawn_map: Cell[][];
-  let vertical_wall_map: Cell[][];
-  let horizontal_wall_map: Cell[][];
-
-  pawn_map = [...Array(game_row_size)].map(() =>
-    Array(game_row_size).fill(Ghost)
-  ); // size(n,n)
-  pawn_map[0][0] = Piece(0, false);
-  pawn_map[2][2] = Piece(1, false);
-
-  vertical_wall_map = [...Array(game_row_size - 1)].map(() =>
-    Array(game_row_size - 1).fill(Ghost)
-  ); // size(n-1,n-1)
-  horizontal_wall_map = [...Array(game_row_size - 1)].map(() =>
-    Array(game_row_size - 1).fill(Ghost)
-  ); // size(n-1,n-1)
+  let { pawn_map, vertical_wall_map, horizontal_wall_map } = ql.initState();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function clickCell(event: any): void {

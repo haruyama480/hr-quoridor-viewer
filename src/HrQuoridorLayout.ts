@@ -18,6 +18,31 @@ export class HrQuoridorLayout {
     this.cell_size = game_size * 2 + 1;
   }
 
+  public initState(): {
+    pawn_map: Cell[][];
+    vertical_wall_map: Cell[][];
+    horizontal_wall_map: Cell[][];
+  } {
+    const n = this.game_size;
+    const pawn_map = [...Array(n)].map(() => Array(n).fill(Ghost)); // size(n,n)
+    const center = Math.floor(n / 2);
+    pawn_map[0][center] = Piece(0, false);
+    pawn_map[n - 1][center] = Piece(1, false);
+
+    const vertical_wall_map = [...Array(n - 1)].map(() =>
+      Array(n - 1).fill(Ghost)
+    ); // size(n-1,n-1)
+    const horizontal_wall_map = [...Array(n - 1)].map(() =>
+      Array(n - 1).fill(Ghost)
+    ); // size(n-1,n-1)
+
+    return {
+      pawn_map,
+      vertical_wall_map,
+      horizontal_wall_map,
+    };
+  }
+
   public isMargin(i: number): boolean {
     return i === 0 || i === this.cell_size - 1; // first or last
   }
