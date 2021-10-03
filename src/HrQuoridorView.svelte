@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { quintOut } from "svelte/easing";
-  import { crossfade } from "svelte/transition";
+  import { crossfade, scale } from "svelte/transition";
   import { HrQuoridorLayout } from "./HrQuoridorLayout";
 
   export let game_row_size = 9;
@@ -93,6 +93,7 @@
                       option_same_wall_color}
                     class:player2={ql.getHorizontalWall(rhwall, y, x) === 2 &&
                       !option_same_wall_color}
+                    transition:scale
                   />
                 {:else if ql.hasGhostVerticalWall(ghost_vertical_wall, y, x)}
                   <div
@@ -113,6 +114,7 @@
                       option_same_wall_color}
                     class:player2={ql.getHorizontalWall(rhwall, y, x) === 2 &&
                       !option_same_wall_color}
+                    transition:scale
                   />
                 {:else if ql.hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
                   <div
