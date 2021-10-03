@@ -4,7 +4,7 @@
   import { crossfade } from "svelte/transition";
   import { HrQuoridorLayout } from "./HrQuoridorLayout";
 
-  export let game_row_size = 5;
+  export let game_row_size = 9;
   export let current_player_id = 1;
   const ql = new HrQuoridorLayout(game_row_size);
 
