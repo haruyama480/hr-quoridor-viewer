@@ -8,7 +8,7 @@
 
   let current_player_id = 1; // 1-index
 
-  let real_pawn: any[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
+  let real_pawn: number[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
   let last_pawn_position: any = {}; // key:player_id, value [y,x]
   let real_vertical_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   let real_horizontal_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
@@ -16,11 +16,9 @@
   let ghost_vertical_wall: number[][];
   let ghost_horizontal_wall: number[][];
 
-  real_pawn = [...Array(game_row_size)].map(() =>
-    [...Array(game_row_size)].map(() => Object.assign({}))
-  ); // size(n,n)
-  real_pawn[0][0].key = 1;
-  real_pawn[2][2].key = 2;
+  real_pawn = [...Array(game_row_size)].map(() => Array(game_row_size).fill(0)); // size(n,n)
+  real_pawn[0][0] = 1;
+  real_pawn[2][2] = 2;
   last_pawn_position[1] = [0, 0];
   last_pawn_position[2] = [2, 2];
 
@@ -53,8 +51,8 @@
     if (ql.isPCell(cy, cx)) {
       let real_pawn_ = JSON.parse(JSON.stringify(real_pawn)); // deep copy
       const [prey, prex] = last_pawn_position[current_player_id];
-      real_pawn_[prey][prex] = {};
-      real_pawn_[y][x].key = current_player_id;
+      real_pawn_[prey][prex] = 0;
+      real_pawn_[y][x] = current_player_id;
       real_pawn = real_pawn_;
       last_pawn_position[current_player_id] = [y, x];
     } else if (ql.isVCell(cy, cx)) {

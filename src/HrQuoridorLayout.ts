@@ -27,17 +27,14 @@ export class HrQuoridorLayout {
   public isPCell(cy: number, cx: number): boolean {
     return this.hasPCell(cx) && this.hasPCell(cy);
   }
-  public hasRealPawn(map: any, cy: number, cx: number): boolean {
+  public getRealPawn(map: number[][], cy: number, cx: number): number {
     const [y, x] = this.toIndex(cy, cx);
-    return this.isPCell(cx, cy) && Object.keys(map[y][x]).length !== 0;
-  }
-  public getRealPawn(map: any, cy: number, cx: number): any {
-    const [y, x] = this.toIndex(cy, cx);
-    if (this.hasRealPawn(map, cy, cx)) {
+    if (this.isPCell(cy, cx)) {
       return map[y][x];
     } else {
-      return {};
+      return 0;
     }
+    return this.isPCell(cx, cy) && Object.keys(map[y][x]).length !== 0;
   }
   public hasGhostPawn(map: any, cy: number, cx: number): boolean {
     const [y, x] = this.toIndex(cy, cx);
@@ -78,4 +75,3 @@ export class HrQuoridorLayout {
     return this.isHCell(cy, cx) && map[y][x] === 1;
   }
 }
-export default HrQuoridorLayout;
