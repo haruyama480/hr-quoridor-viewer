@@ -1,8 +1,11 @@
 <script lang="ts">
+  import HrQuoridorLayout from "./HrQuoridorLayout";
   import HrQuoridorView from "./HrQuoridorView.svelte";
 
   const game_row_size = 9;
   const game_player_size = 2;
+  const ql = new HrQuoridorLayout(game_row_size);
+
   let current_player_id = 1; // 1-index
 
   let real_pawn: any[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
@@ -43,54 +46,23 @@
   ghost_horizontal_wall[0][0] = 1;
   ghost_horizontal_wall[1][1] = 1;
 
-  $: inner_n = game_row_size * 2 + 1;
-  function isMargin(i: number): boolean {
-    return i === 0 || i === inner_n - 1; // first or last
-  }
-  function isPath(i: number): boolean {
-    return i % 2 === 0 && !isMargin(i);
-  }
-  function toIndex(cy: number, cx: number): [number, number] {
-    // PCell, VCell, HCellをすべて0始まりのindexに
-    // marginは、-1 や game_row_size-1 になったりする
-    const y = Math.floor((cy - 1) / 2);
-    const x = Math.floor((cx - 1) / 2);
-    return [y, x];
-  }
-
-  // PCell : where a pawn can be exist
-  function hasPCell(i: number): boolean {
-    return !isMargin(i) && !isPath(i);
-  }
-  function isPCell(cy: number, cx: number): boolean {
-    return hasPCell(cx) && hasPCell(cy);
-  }
-  // VCell : where a vertical wall can be exist
-  function isVCell(cy: number, cx: number): boolean {
-    return hasPCell(cy) && isPath(cx);
-  }
-  // HCell : where a horizontal wall can be exist
-  function isHCell(cy: number, cx: number): boolean {
-    return isPath(cy) && hasPCell(cx);
-  }
-
   function clickCell(event: any): any {
     const cy = event.detail.cy;
     const cx = event.detail.cx;
-    let [y, x] = toIndex(cy, cx);
-    if (isPCell(cy, cx)) {
+    let [y, x] = ql.toIndex(cy, cx);
+    if (ql.isPCell(cy, cx)) {
       let real_pawn_ = JSON.parse(JSON.stringify(real_pawn)); // deep copy
       const [prey, prex] = last_pawn_position[current_player_id];
       real_pawn_[prey][prex] = {};
       real_pawn_[y][x].key = current_player_id;
       real_pawn = real_pawn_;
       last_pawn_position[current_player_id] = [y, x];
-    } else if (isVCell(cy, cx)) {
+    } else if (ql.isVCell(cy, cx)) {
       let real_vertical_wall_ = Object.assign([], real_vertical_wall);
       if (y === game_row_size - 1) y--;
       real_vertical_wall_[y][x] = current_player_id;
       real_vertical_wall = real_vertical_wall_;
-    } else if (isHCell(cy, cx)) {
+    } else if (ql.isHCell(cy, cx)) {
       let real_horizontal_wall_ = Object.assign([], real_horizontal_wall);
       if (x === game_row_size - 1) x--;
       real_horizontal_wall_[y][x] = current_player_id;

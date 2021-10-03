@@ -2,10 +2,11 @@
   import { createEventDispatcher } from "svelte";
   import { quintOut } from "svelte/easing";
   import { crossfade } from "svelte/transition";
+  import HrQuoridorLayout from "./HrQuoridorLayout";
 
   export let game_row_size = 5;
   export let current_player_id = 1;
-  $: inner_n = game_row_size * 2 + 1;
+  const ql = new HrQuoridorLayout(game_row_size);
 
   export let real_pawn: any[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
   export let last_pawn_position: any = {}; // key:player_id, value [y,x]
@@ -16,74 +17,6 @@
   export let ghost_horizontal_wall: number[][];
   $: rvwall = real_vertical_wall; // for html
   $: rhwall = real_horizontal_wall;
-
-  function isMargin(i: number): boolean {
-    return i === 0 || i === inner_n - 1; // first or last
-  }
-  function isPath(i: number): boolean {
-    return i % 2 === 0 && !isMargin(i);
-  }
-  function toIndex(cy: number, cx: number): [number, number] {
-    // PCell, VCell, HCellをすべて0始まりのindexに
-    // marginは、-1 や game_row_size-1 になったりする
-    const y = Math.floor((cy - 1) / 2);
-    const x = Math.floor((cx - 1) / 2);
-    return [y, x];
-  }
-
-  // PCell : where a pawn can be exist
-  function hasPCell(i: number): boolean {
-    return !isMargin(i) && !isPath(i);
-  }
-  function isPCell(cy: number, cx: number): boolean {
-    return hasPCell(cx) && hasPCell(cy);
-  }
-  function hasRealPawn(map: any, cy: number, cx: number): boolean {
-    const [y, x] = toIndex(cy, cx);
-    return isPCell(cx, cy) && Object.keys(map[y][x]).length !== 0;
-  }
-  function getRealPawn(map: any, cy: number, cx: number): any {
-    const [y, x] = toIndex(cy, cx);
-    if (hasRealPawn(map, cy, cx)) {
-      return map[y][x];
-    } else {
-      return {};
-    }
-  }
-  function hasGhostPawn(map: any, cy: number, cx: number): boolean {
-    const [y, x] = toIndex(cy, cx);
-    return isPCell(cx, cy) && map[y][x] === 1;
-  }
-
-  // VCell : where a vertical wall can be exist
-  function isVCell(cy: number, cx: number): boolean {
-    return hasPCell(cy) && isPath(cx);
-  }
-  function getVerticalWall(map: any, cy: number, cx: number): number {
-    let [y, x] = toIndex(cy, cx);
-    if (!isVCell(cy, cx) || y === game_row_size - 1) return 0;
-    return map[y][x];
-  }
-  function hasGhostVerticalWall(map: any, cy: number, cx: number): boolean {
-    let [y, x] = toIndex(cy, cx);
-    if (y === game_row_size - 1) y--;
-    return isVCell(cy, cx) && map[y][x] === 1;
-  }
-
-  // HCell : where a horizontal wall can be exist
-  function isHCell(cy: number, cx: number): boolean {
-    return isPath(cy) && hasPCell(cx);
-  }
-  function getHorizontalWall(map: any, cy: number, cx: number): number {
-    let [y, x] = toIndex(cy, cx);
-    if (!isHCell(cy, cx) || x === game_row_size - 1) return 0;
-    return map[y][x];
-  }
-  function hasGhostHorizontalWall(map: any, cy: number, cx: number): boolean {
-    let [y, x] = toIndex(cy, cx);
-    if (x === game_row_size - 1) x--;
-    return isHCell(cy, cx) && map[y][x] === 1;
-  }
 
   // HANDLER
   const dispatch = createEventDispatcher();
@@ -125,57 +58,61 @@
 </script>
 
 <div class="rowContainer">
-  {#each Array.from({ length: inner_n }, (_, i) => inner_n - i - 1) as y}
+  {#each Array.from({ length: ql.cell_size }, (_, i) => ql.cell_size - i - 1) as y}
     <div
       class="columnContainer"
-      class:rowPCell={hasPCell(y)}
-      class:rowPath={isPath(y)}
-      class:rowMargin={isMargin(y)}
+      class:rowPCell={ql.hasPCell(y)}
+      class:rowPath={ql.isPath(y)}
+      class:rowMargin={ql.isMargin(y)}
     >
-      {#each Array.from({ length: inner_n }, (_, i) => i) as _, x}
+      {#each Array.from({ length: ql.cell_size }, (_, i) => i) as _, x}
         <div
-          class:columnPCell={hasPCell(x)}
-          class:columnPath={isPath(x)}
-          class:columnMargin={isMargin(x)}
+          class:columnPCell={ql.hasPCell(x)}
+          class:columnPath={ql.isPath(x)}
+          class:columnMargin={ql.isMargin(x)}
           on:mouseenter={hoverCell(y, x)}
           on:click={clickCell(y, x)}
         >
-          {#if !isMargin(y) && !isMargin(x)}
+          {#if !ql.isMargin(y) && !ql.isMargin(x)}
             <div class="cell" style="height: 100%; width:100%;">
-              {#if isPCell(y, x)}
-                {#if hasRealPawn(real_pawn, y, x)}
+              {#if ql.isPCell(y, x)}
+                {#if ql.hasRealPawn(real_pawn, y, x)}
                   <div
-                    class="pawn player{getRealPawn(real_pawn, y, x).key}"
-                    in:receive={getRealPawn(real_pawn, y, x)}
-                    out:send={getRealPawn(real_pawn, y, x)}
+                    class="pawn player{ql.getRealPawn(real_pawn, y, x).key}"
+                    in:receive={ql.getRealPawn(real_pawn, y, x)}
+                    out:send={ql.getRealPawn(real_pawn, y, x)}
                   />
-                {:else if hasGhostPawn(ghost_pawn, y, x)}
+                {:else if ql.hasGhostPawn(ghost_pawn, y, x)}
                   <div class="ghost pawn" />
                 {/if}
-              {:else if isVCell(y, x)}
-                {#if getVerticalWall(rvwall, y, x) !== 0}
+              {:else if ql.isVCell(y, x)}
+                {#if ql.getVerticalWall(rvwall, y, x) !== 0}
                   <div
-                    class="verticalWall player{getVerticalWall(rvwall, y, x)}"
+                    class="verticalWall player{ql.getVerticalWall(
+                      rvwall,
+                      y,
+                      x
+                    )}"
                   />
-                {:else if hasGhostVerticalWall(ghost_vertical_wall, y, x)}
+                {:else if ql.hasGhostVerticalWall(ghost_vertical_wall, y, x)}
                   <div
                     class="ghost verticalWall player{current_player_id}"
-                    class:lastVerticalWall={y === inner_n - 2}
+                    class:lastVerticalWall={y === ql.cell_size - 2}
                   />
                 {/if}
-              {:else if isHCell(y, x)}
-                {#if getHorizontalWall(rhwall, y, x) !== 0}
+              {:else if ql.isHCell(y, x)}
+                {#if ql.getHorizontalWall(rhwall, y, x) !== 0}
                   <div
-                    class="horizontalWall player{getHorizontalWall(
+                    class="horizontalWall player{ql.getHorizontalWall(
                       rhwall,
                       y,
                       x
                     )}"
                   />
-                {:else if hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
+                {:else if ql.hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
                   <div
                     class="ghost horizontalWall player{current_player_id}"
-                    class:lastHorizontalWall={x === inner_n - 2}
+                    class:lastHorizontalWall={x === ql.cell_size - 2}
                   />
                 {/if}
               {/if}
