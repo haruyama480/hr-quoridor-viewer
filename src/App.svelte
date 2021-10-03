@@ -9,7 +9,6 @@
   let current_player_id = 1; // 1-index
 
   let real_pawn: number[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
-  let last_pawn_position: any = {}; // key:player_id, value [y,x]
   let real_vertical_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   let real_horizontal_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   let ghost_pawn: number[][];
@@ -19,8 +18,6 @@
   real_pawn = [...Array(game_row_size)].map(() => Array(game_row_size).fill(0)); // size(n,n)
   real_pawn[0][0] = 1;
   real_pawn[2][2] = 2;
-  last_pawn_position[1] = [0, 0];
-  last_pawn_position[2] = [2, 2];
 
   real_vertical_wall = [...Array(game_row_size - 1)].map(() =>
     Array(game_row_size - 1).fill(0)
@@ -56,7 +53,6 @@
       );
       real_pawn_[y][x] = current_player_id;
       real_pawn = real_pawn_;
-      last_pawn_position[current_player_id] = [y, x];
     } else if (ql.isVCell(cy, cx)) {
       let real_vertical_wall_ = Object.assign([], real_vertical_wall);
       if (y === game_row_size - 1) y--;
@@ -78,7 +74,6 @@
     {game_row_size}
     {current_player_id}
     {real_pawn}
-    {last_pawn_position}
     {real_vertical_wall}
     {real_horizontal_wall}
     {ghost_pawn}

@@ -9,7 +9,6 @@
   const ql = new HrQuoridorLayout(game_row_size);
 
   export let real_pawn: number[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
-  export let last_pawn_position: any = {}; // key:player_id, value [y,x]
   export let real_vertical_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   export let real_horizontal_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   export let ghost_pawn: number[][];
