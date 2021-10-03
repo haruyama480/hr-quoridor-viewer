@@ -131,7 +131,6 @@
     </div>
   {/each}
 </div>
-1
 
 <style type="text/css">
   /* grid layout */
