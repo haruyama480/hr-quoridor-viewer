@@ -6,24 +6,26 @@
   const game_player_size = 2;
   const ql = new HrQuoridorLayout(game_row_size);
 
-  let current_player_id = 1; // 1-index
+  let current_player_id = 0; // 0-index
 
-  let real_pawn: number[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
+  let real_pawn: number[][]; // (y,x):位置 value:pawnのplayer_id(ex, 0,1) -1のとき非表示
   let real_vertical_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   let real_horizontal_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   let ghost_pawn: number[][];
   let ghost_vertical_wall: number[][];
   let ghost_horizontal_wall: number[][];
 
-  real_pawn = [...Array(game_row_size)].map(() => Array(game_row_size).fill(0)); // size(n,n)
-  real_pawn[0][0] = 1;
-  real_pawn[2][2] = 2;
+  real_pawn = [...Array(game_row_size)].map(() =>
+    Array(game_row_size).fill(-1)
+  ); // size(n,n)
+  real_pawn[0][0] = 0;
+  real_pawn[2][2] = 1;
 
   real_vertical_wall = [...Array(game_row_size - 1)].map(() =>
-    Array(game_row_size - 1).fill(0)
+    Array(game_row_size - 1).fill(-1)
   ); // size(n-1,n-1)
   real_horizontal_wall = [...Array(game_row_size - 1)].map(() =>
-    Array(game_row_size - 1).fill(0)
+    Array(game_row_size - 1).fill(-1)
   ); // size(n-1,n-1)
   ghost_pawn = [...Array(game_row_size)].map(() =>
     Array(game_row_size).fill(1)
@@ -43,7 +45,7 @@
     if (ql.isPCell(cy, cx)) {
       let real_pawn_ = JSON.parse(JSON.stringify(real_pawn)); // deep copy
       real_pawn_ = real_pawn_.map((row) =>
-        row.map((cell) => (cell == current_player_id ? 0 : cell))
+        row.map((cell) => (cell == current_player_id ? -1 : cell))
       );
       real_pawn_[y][x] = current_player_id;
       real_pawn = real_pawn_;
@@ -59,8 +61,7 @@
       real_horizontal_wall = real_horizontal_wall_;
     }
     // FIXME: switch only when state changed
-    current_player_id =
-      current_player_id + 1 > game_player_size ? 1 : current_player_id + 1;
+    current_player_id = (current_player_id + 1) % game_player_size;
   }
 </script>
 

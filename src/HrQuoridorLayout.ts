@@ -1,3 +1,8 @@
+interface Piece {
+  value: 'none' | 'ghost' | number;
+  notable: boolean;
+}
+
 export class HrQuoridorLayout {
   game_size: number;
   cell_size: number;
@@ -47,7 +52,7 @@ export class HrQuoridorLayout {
   public getVerticalWall(map: number[][], cy: number, cx: number): number {
     // eslint-disable-next-line prefer-const
     let [y, x] = this.toIndex(cy, cx);
-    if (!this.isVCell(cy, cx) || y === this.game_size - 1) return 0;
+    if (!this.isVCell(cy, cx) || y === this.game_size - 1) return -1;
     return map[y][x];
   }
   public hasGhostVerticalWall(map: number[][], cy: number, cx: number): boolean {
@@ -64,7 +69,7 @@ export class HrQuoridorLayout {
   public getHorizontalWall(map: number[][], cy: number, cx: number): number {
     // eslint-disable-next-line prefer-const
     let [y, x] = this.toIndex(cy, cx);
-    if (!this.isHCell(cy, cx) || x === this.game_size - 1) return 0;
+    if (!this.isHCell(cy, cx) || x === this.game_size - 1) return -1;
     return map[y][x];
   }
   public hasGhostHorizontalWall(map: number[][], cy: number, cx: number): boolean {

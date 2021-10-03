@@ -5,13 +5,13 @@
   import { HrQuoridorLayout } from "./HrQuoridorLayout";
 
   export let game_row_size = 9;
-  export let current_player_id = 1;
-  export let option_same_wall_color = true;
+  export let current_player_id = 0;
+  export let option_same_wall_color = false;
   const ql = new HrQuoridorLayout(game_row_size);
 
-  export let real_pawn: number[][]; // (y,x):位置 value:pawnのplayer_id(ex, 1-2) 0のとき非表示
-  export let real_vertical_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
-  export let real_horizontal_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
+  export let real_pawn: number[][]; // (y,x):位置 value:pawnのplayer_id(ex, 0-1) -1のとき非表示
+  export let real_vertical_wall: number[][]; // (y,x):位置 value:色 -1のとき非表示
+  export let real_horizontal_wall: number[][]; // (y,x):位置 value:色 -1のとき非表示
   export let ghost_pawn: number[][];
   export let ghost_vertical_wall: number[][];
   export let ghost_horizontal_wall: number[][];
@@ -76,7 +76,7 @@
           {#if !ql.isMargin(y) && !ql.isMargin(x)}
             <div class="cell" style="height: 100%; width:100%;">
               {#if ql.isPCell(y, x)}
-                {#if ql.getRealPawn(real_pawn, y, x) !== 0}
+                {#if ql.getRealPawn(real_pawn, y, x) !== -1}
                   <div
                     class="pawn player{ql.getRealPawn(real_pawn, y, x)}"
                     in:receive={{ key: ql.getRealPawn(real_pawn, y, x) }}
@@ -86,42 +86,42 @@
                   <div class="ghost pawn player{current_player_id}" />
                 {/if}
               {:else if ql.isVCell(y, x)}
-                {#if ql.getVerticalWall(rvwall, y, x) !== 0}
+                {#if ql.getVerticalWall(rvwall, y, x) !== -1}
                   <div
                     class="verticalWall"
-                    class:player1={ql.getHorizontalWall(rhwall, y, x) === 1 ||
+                    class:player0={ql.getVerticalWall(rvwall, y, x) === 0 ||
                       option_same_wall_color}
-                    class:player2={ql.getHorizontalWall(rhwall, y, x) === 2 &&
+                    class:player1={ql.getVerticalWall(rvwall, y, x) === 1 &&
                       !option_same_wall_color}
                     transition:scale
                   />
                 {:else if ql.hasGhostVerticalWall(ghost_vertical_wall, y, x)}
                   <div
                     class="ghost verticalWall player{current_player_id}"
-                    class:player1={current_player_id === 1 ||
+                    class:player0={current_player_id === 0 ||
                       option_same_wall_color}
-                    class:player2={current_player_id === 2 &&
+                    class:player1={current_player_id === 1 &&
                       !option_same_wall_color}
                     class:lastHorizontalWall={x === ql.cell_size - 2}
                     class:lastVerticalWall={y === ql.cell_size - 2}
                   />
                 {/if}
               {:else if ql.isHCell(y, x)}
-                {#if ql.getHorizontalWall(rhwall, y, x) !== 0}
+                {#if ql.getHorizontalWall(rhwall, y, x) !== -1}
                   <div
                     class="horizontalWall"
-                    class:player1={ql.getHorizontalWall(rhwall, y, x) === 1 ||
+                    class:player0={ql.getHorizontalWall(rhwall, y, x) === 0 ||
                       option_same_wall_color}
-                    class:player2={ql.getHorizontalWall(rhwall, y, x) === 2 &&
+                    class:player1={ql.getHorizontalWall(rhwall, y, x) === 1 &&
                       !option_same_wall_color}
                     transition:scale
                   />
                 {:else if ql.hasGhostHorizontalWall(ghost_horizontal_wall, y, x)}
                   <div
                     class="ghost horizontalWall"
-                    class:player1={current_player_id === 1 ||
+                    class:player0={current_player_id === 0 ||
                       option_same_wall_color}
-                    class:player2={current_player_id === 2 &&
+                    class:player1={current_player_id === 1 &&
                       !option_same_wall_color}
                     class:lastHorizontalWall={x === ql.cell_size - 2}
                   />
@@ -134,6 +134,7 @@
     </div>
   {/each}
 </div>
+1
 
 <style type="text/css">
   /* grid layout */
@@ -248,10 +249,10 @@
     visibility: visible;
   }
 
-  .player1 {
+  .player0 {
     background: #2a2a2a;
   }
-  .player2 {
+  .player1 {
     background: #fff;
   }
 </style>
