@@ -190,8 +190,8 @@
     height: 70%;
     width: 70%;
     border-radius: 50%;
-    border: 1px solid gray;
-    box-sizing: border-box;
+    /* border: 1px solid gray; */
+    /* box-sizing: border-box; */
     z-index: 1;
   }
 
@@ -201,9 +201,9 @@
   .verticalWall,
   .horizontalWall {
     position: absolute;
-    border-radius: 10%;
-    border: 1px solid gray;
-    box-sizing: border-box;
+    border-radius: 5px;
+    /* border: 1px solid gray;
+    box-sizing: border-box; */
     z-index: 1;
   }
   .verticalWall {
