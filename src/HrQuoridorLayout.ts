@@ -1,13 +1,14 @@
-
-export type CellType = 'none' | 'ghost' | 'piece'
+export type CellType = "none" | "ghost" | "piece";
 export interface Cell {
   kind: CellType;
   player_id: number;
   notable: boolean;
 }
-export const None : Cell = {kind: "none", player_id: -1, notable: false};
-export const Ghost : Cell = {kind: "ghost", player_id: -1, notable: false};
-export const Piece : (pid: number, ntb: boolean) => Cell = (pid, ntb) => {return {kind: "piece", player_id: pid, notable: ntb}};
+export const None: Cell = { kind: "none", player_id: -1, notable: false };
+export const Ghost: Cell = { kind: "ghost", player_id: -1, notable: false };
+export const Piece: (pid: number, ntb: boolean) => Cell = (pid, ntb) => {
+  return { kind: "piece", player_id: pid, notable: ntb };
+};
 
 export class HrQuoridorLayout {
   game_size: number;
