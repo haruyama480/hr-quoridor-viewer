@@ -51,8 +51,9 @@
     let [y, x] = ql.toIndex(cy, cx);
     if (ql.isPCell(cy, cx)) {
       let real_pawn_ = JSON.parse(JSON.stringify(real_pawn)); // deep copy
-      const [prey, prex] = last_pawn_position[current_player_id];
-      real_pawn_[prey][prex] = 0;
+      real_pawn_ = real_pawn_.map((row) =>
+        row.map((cell) => (cell == current_player_id ? 0 : cell))
+      );
       real_pawn_[y][x] = current_player_id;
       real_pawn = real_pawn_;
       last_pawn_position[current_player_id] = [y, x];
