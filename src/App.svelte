@@ -1,5 +1,5 @@
 <script lang="ts">
-  import HrQuoridorLayout from "./HrQuoridorLayout";
+  import { HrQuoridorLayout } from "./HrQuoridorLayout";
   import HrQuoridorView from "./HrQuoridorView.svelte";
 
   const game_row_size = 9;

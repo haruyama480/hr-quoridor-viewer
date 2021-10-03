@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { quintOut } from "svelte/easing";
   import { crossfade } from "svelte/transition";
-  import HrQuoridorLayout from "./HrQuoridorLayout";
+  import { HrQuoridorLayout } from "./HrQuoridorLayout";
 
   export let game_row_size = 5;
   export let current_player_id = 1;

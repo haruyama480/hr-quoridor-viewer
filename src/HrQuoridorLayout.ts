@@ -1,4 +1,4 @@
-class HrQuoridorLayout {
+export class HrQuoridorLayout {
   game_size: number;
   cell_size: number;
   constructor(game_size: number) {
