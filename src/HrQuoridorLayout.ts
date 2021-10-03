@@ -51,17 +51,11 @@ export class HrQuoridorLayout {
   public isVCell(cy: number, cx: number): boolean {
     return this.hasPCell(cy) && this.isPath(cx);
   }
-  public getVerticalWall(map: number[][], cy: number, cx: number): number {
+  public getVerticalWall(map: Cell[][], cy: number, cx: number): Cell {
     // eslint-disable-next-line prefer-const
     let [y, x] = this.toIndex(cy, cx);
-    if (!this.isVCell(cy, cx) || y === this.game_size - 1) return -1;
+    if (!this.isVCell(cy, cx) || y === this.game_size - 1) return None;
     return map[y][x];
-  }
-  public hasGhostVerticalWall(map: number[][], cy: number, cx: number): boolean {
-    // eslint-disable-next-line prefer-const
-    let [y, x] = this.toIndex(cy, cx);
-    if (y === this.game_size - 1) y--;
-    return this.isVCell(cy, cx) && map[y][x] === 1;
   }
 
   // HCell : where a horizontal wall can be exist
