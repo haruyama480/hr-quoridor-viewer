@@ -1,7 +1,13 @@
-interface Piece {
-  value: 'none' | 'ghost' | number;
+
+export type CellType = 'none' | 'ghost' | 'piece'
+export interface Cell {
+  kind: CellType;
+  player_id: number;
   notable: boolean;
 }
+export const None : Cell = {kind: "none", player_id: -1, notable: false};
+export const Ghost : Cell = {kind: "ghost", player_id: -1, notable: false};
+export const Piece : (pid: number, ntb: boolean) => Cell = (pid, ntb) => {return {kind: "piece", player_id: pid, notable: ntb}};
 
 export class HrQuoridorLayout {
   game_size: number;
@@ -32,17 +38,13 @@ export class HrQuoridorLayout {
   public isPCell(cy: number, cx: number): boolean {
     return this.hasPCell(cx) && this.hasPCell(cy);
   }
-  public getRealPawn(map: number[][], cy: number, cx: number): number {
+  public getPawn(map: PCellMap, cy: number, cx: number): Cell {
     const [y, x] = this.toIndex(cy, cx);
     if (this.isPCell(cy, cx)) {
       return map[y][x];
     } else {
-      return 0;
+      return None;
     }
-  }
-  public hasGhostPawn(map: number[][], cy: number, cx: number): boolean {
-    const [y, x] = this.toIndex(cy, cx);
-    return this.isPCell(cx, cy) && map[y][x] === 1;
   }
 
   // VCell : where a vertical wall can be exist

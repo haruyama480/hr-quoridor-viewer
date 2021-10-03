@@ -2,17 +2,16 @@
   import { createEventDispatcher } from "svelte";
   import { quintOut } from "svelte/easing";
   import { crossfade, scale } from "svelte/transition";
-  import { HrQuoridorLayout } from "./HrQuoridorLayout";
+  import { Cell, HrQuoridorLayout } from "./HrQuoridorLayout";
 
   export let game_row_size = 9;
   export let current_player_id = 0;
   export let option_same_wall_color = false;
   const ql = new HrQuoridorLayout(game_row_size);
 
-  export let real_pawn: number[][]; // (y,x):位置 value:pawnのplayer_id(ex, 0-1) -1のとき非表示
+  export let real_pawn: Cell[][]; // (y,x):位置 value:pawnのplayer_id(ex, 0-1) -1のとき非表示
   export let real_vertical_wall: number[][]; // (y,x):位置 value:色 -1のとき非表示
   export let real_horizontal_wall: number[][]; // (y,x):位置 value:色 -1のとき非表示
-  export let ghost_pawn: number[][];
   export let ghost_vertical_wall: number[][];
   export let ghost_horizontal_wall: number[][];
   $: rvwall = real_vertical_wall; // for html
@@ -76,13 +75,13 @@
           {#if !ql.isMargin(y) && !ql.isMargin(x)}
             <div class="cell" style="height: 100%; width:100%;">
               {#if ql.isPCell(y, x)}
-                {#if ql.getRealPawn(real_pawn, y, x) !== -1}
+                {#if ql.getPawn(real_pawn, y, x).kind === "piece"}
                   <div
-                    class="pawn player{ql.getRealPawn(real_pawn, y, x)}"
-                    in:receive={{ key: ql.getRealPawn(real_pawn, y, x) }}
-                    out:send={{ key: ql.getRealPawn(real_pawn, y, x) }}
+                    class="pawn player{ql.getPawn(real_pawn, y, x).player_id}"
+                    in:receive={{ key: ql.getPawn(real_pawn, y, x).player_id }}
+                    out:send={{ key: ql.getPawn(real_pawn, y, x).player_id }}
                   />
-                {:else if ql.hasGhostPawn(ghost_pawn, y, x)}
+                {:else if ql.getPawn(real_pawn, y, x).kind === "ghost"}
                   <div class="ghost pawn player{current_player_id}" />
                 {/if}
               {:else if ql.isVCell(y, x)}

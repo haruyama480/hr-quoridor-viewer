@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { HrQuoridorLayout } from "./HrQuoridorLayout";
+  import { Cell, Ghost, HrQuoridorLayout, Piece } from "./HrQuoridorLayout";
   import HrQuoridorView from "./HrQuoridorView.svelte";
 
   const game_row_size = 9;
@@ -8,18 +8,17 @@
 
   let current_player_id = 0; // 0-index
 
-  let real_pawn: number[][]; // (y,x):位置 value:pawnのplayer_id(ex, 0,1) -1のとき非表示
+  let real_pawn: Cell[][]; // (y,x):位置 value:pawnのplayer_id(ex, 0,1) -1のとき非表示
   let real_vertical_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
   let real_horizontal_wall: number[][]; // (y,x):位置 value:色 0のとき非表示
-  let ghost_pawn: number[][];
   let ghost_vertical_wall: number[][];
   let ghost_horizontal_wall: number[][];
 
   real_pawn = [...Array(game_row_size)].map(() =>
-    Array(game_row_size).fill(-1)
+    Array(game_row_size).fill(Ghost)
   ); // size(n,n)
-  real_pawn[0][0] = 0;
-  real_pawn[2][2] = 1;
+  real_pawn[0][0] = Piece(0, false);
+  real_pawn[2][2] = Piece(1, false);
 
   real_vertical_wall = [...Array(game_row_size - 1)].map(() =>
     Array(game_row_size - 1).fill(-1)
@@ -27,9 +26,6 @@
   real_horizontal_wall = [...Array(game_row_size - 1)].map(() =>
     Array(game_row_size - 1).fill(-1)
   ); // size(n-1,n-1)
-  ghost_pawn = [...Array(game_row_size)].map(() =>
-    Array(game_row_size).fill(1)
-  ); // size(n,n)
   ghost_vertical_wall = [...Array(game_row_size - 1)].map(() =>
     Array(game_row_size - 1).fill(1)
   ); // size(n-1,n-1)
@@ -43,11 +39,15 @@
     const cx = event.detail.cx;
     let [y, x] = ql.toIndex(cy, cx);
     if (ql.isPCell(cy, cx)) {
-      let real_pawn_ = JSON.parse(JSON.stringify(real_pawn)); // deep copy
-      real_pawn_ = real_pawn_.map((row) =>
-        row.map((cell) => (cell == current_player_id ? -1 : cell))
+      let real_pawn_: Cell[][] = JSON.parse(JSON.stringify(real_pawn)); // deep copy
+      real_pawn_ = real_pawn_.map((row: Cell[]) =>
+        row.map((cell: Cell) =>
+          cell.kind == "piece" && cell.player_id == current_player_id
+            ? Ghost
+            : cell
+        )
       );
-      real_pawn_[y][x] = current_player_id;
+      real_pawn_[y][x] = Piece(current_player_id, false);
       real_pawn = real_pawn_;
     } else if (ql.isVCell(cy, cx)) {
       let real_vertical_wall_ = Object.assign([], real_vertical_wall);
@@ -72,7 +72,6 @@
     {real_pawn}
     {real_vertical_wall}
     {real_horizontal_wall}
-    {ghost_pawn}
     {ghost_vertical_wall}
     {ghost_horizontal_wall}
     on:clickCell={clickCell}
