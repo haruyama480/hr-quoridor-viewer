@@ -31,6 +31,12 @@
     const cx = event.detail.cx;
     let [y, x] = ql.toIndex(cy, cx);
     if (ql.isPCell(cy, cx)) {
+      if (
+        pawn_map[y][x].kind === "piece" &&
+        pawn_map[y][x].player_id === current_player_id
+      ) {
+        return; // no change;
+      }
       let pawn_map_: Cell[][] = JSON.parse(JSON.stringify(pawn_map)); // deep copy
       pawn_map_ = pawn_map_.map((row: Cell[]) =>
         row.map((cell: Cell) =>
@@ -42,17 +48,28 @@
       pawn_map_[y][x] = Piece(current_player_id, false);
       pawn_map = pawn_map_;
     } else if (ql.isVCell(cy, cx)) {
+      if (
+        vertical_wall_map[y][x].kind === "piece" &&
+        vertical_wall_map[y][x].player_id === current_player_id
+      ) {
+        return; // no change;
+      }
       let vertical_wall__map = Object.assign([], vertical_wall_map);
       if (y === game_row_size - 1) y--;
       vertical_wall__map[y][x] = Piece(current_player_id, false);
       vertical_wall_map = vertical_wall__map;
     } else if (ql.isHCell(cy, cx)) {
+      if (
+        horizontal_wall[y][x].kind === "piece" &&
+        horizontal_wall[y][x].player_id === current_player_id
+      ) {
+        return; // no change;
+      }
       let horizontal_wall_ = Object.assign([], horizontal_wall);
       if (x === game_row_size - 1) x--;
       horizontal_wall_[y][x] = Piece(current_player_id, false);
       horizontal_wall = horizontal_wall_;
     }
-    // FIXME: switch only when state changed
     current_player_id = (current_player_id + 1) % game_player_size;
   }
 </script>
