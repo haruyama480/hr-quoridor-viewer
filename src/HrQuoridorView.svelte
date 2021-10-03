@@ -10,10 +10,10 @@
   const ql = new HrQuoridorLayout(game_row_size);
 
   export let pawn_map: Cell[][];
-  export let real_vertical_wall: Cell[][];
+  export let vertical_wall_map: Cell[][];
   export let real_horizontal_wall: number[][]; // (y,x):位置 value:色 -1のとき非表示
   export let ghost_horizontal_wall: number[][];
-  $: rvwall = real_vertical_wall; // for html
+  $: vwall = vertical_wall_map; // for html
   $: rhwall = real_horizontal_wall;
 
   // HANDLER
@@ -84,16 +84,16 @@
                   <div class="ghost pawn player{current_player_id}" />
                 {/if}
               {:else if ql.isVCell(y, x)}
-                {#if ql.getVerticalWall(rvwall, y, x).kind === "piece"}
+                {#if ql.getVerticalWall(vwall, y, x).kind === "piece"}
                   <div
                     class="verticalWall"
-                    class:player0={ql.getVerticalWall(rvwall, y, x)
-                      .player_id === 0 || option_same_wall_color}
-                    class:player1={ql.getVerticalWall(rvwall, y, x)
-                      .player_id === 1 && !option_same_wall_color}
+                    class:player0={ql.getVerticalWall(vwall, y, x).player_id ===
+                      0 || option_same_wall_color}
+                    class:player1={ql.getVerticalWall(vwall, y, x).player_id ===
+                      1 && !option_same_wall_color}
                     transition:scale
                   />
-                {:else if ql.getVerticalWall(rvwall, y, x).kind === "ghost"}
+                {:else if ql.getVerticalWall(vwall, y, x).kind === "ghost"}
                   <div
                     class="ghost verticalWall player{current_player_id}"
                     class:player0={current_player_id === 0 ||
