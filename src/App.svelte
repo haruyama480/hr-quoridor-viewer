@@ -16,7 +16,7 @@
   const ql = new HrQuoridorLayout(game_row_size);
 
   let current_player_id = 0; // 0-index
-  let { board, current_pawn } = ql.initState();
+  let { board, current_pawn, goal } = ql.initState();
 
   function nextTurn() {
     current_player_id = (current_player_id + 1) % game_player_size;
@@ -58,7 +58,7 @@
       if (x === game_row_size - 1) x--;
       board_.horizontal_wall[y][x] = Piece(current_player_id, false);
     }
-    if (validateWall(current_pawn, [], board)) {
+    if (validateWall(current_pawn, goal, board)) {
       board = board_;
       nextTurn();
     }
