@@ -23,6 +23,12 @@ export const gmap: (grid: Grid, f: (Cell) => Cell) => Grid = (grid, f) => {
   return grid.map((row) => row.map((cell) => f(cell)));
 };
 
+export interface Board {
+  pawn: Grid;
+  vertical_wall: Grid;
+  horizontal_wall: Grid;
+}
+
 export class HrQuoridorLayout {
   game_size: number;
   cell_size: number;
@@ -32,33 +38,35 @@ export class HrQuoridorLayout {
   }
 
   public initState(): {
-    pawn_map: Grid;
+    board: Board;
     pawn_position: [number, number][]; // supports only 2-player game
-    vertical_wall_map: Grid;
-    horizontal_wall_map: Grid;
   } {
     const n = this.game_size;
-    const pawn_map = [...Array(n)].map(() => Array(n).fill(Ghost)); // size(n,n)
+    const pawn: Grid = [...Array(n)].map(() => Array(n).fill(Ghost)); // size(n,n)
     const center = Math.floor(n / 2);
     const pawn_position = [
       [0, center],
       [n - 1, center],
     ];
-    pawn_map[0][center] = Piece(0, false);
-    pawn_map[n - 1][center] = Piece(1, false);
+    pawn[0][center] = Piece(0, false);
+    pawn[n - 1][center] = Piece(1, false);
 
-    const vertical_wall_map = [...Array(n - 1)].map(() =>
+    const vertical_wall: Grid = [...Array(n - 1)].map(() =>
       Array(n - 1).fill(Ghost)
     ); // size(n-1,n-1)
-    const horizontal_wall_map = [...Array(n - 1)].map(() =>
+    const horizontal_wall: Grid = [...Array(n - 1)].map(() =>
       Array(n - 1).fill(Ghost)
     ); // size(n-1,n-1)
+
+    const board = {
+      pawn,
+      vertical_wall,
+      horizontal_wall,
+    };
 
     return {
-      pawn_map,
+      board,
       pawn_position,
-      vertical_wall_map,
-      horizontal_wall_map,
     };
   }
 

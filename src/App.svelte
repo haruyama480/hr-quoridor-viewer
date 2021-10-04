@@ -15,8 +15,7 @@
   const ql = new HrQuoridorLayout(game_row_size);
 
   let current_player_id = 0; // 0-index
-  let { pawn_map, pawn_position, vertical_wall_map, horizontal_wall_map } =
-    ql.initState();
+  let { board, pawn_position } = ql.initState();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function clickCell(event: any): void {
@@ -24,32 +23,32 @@
     const cx = event.detail.cx;
     let [y, x] = ql.toIndex(cy, cx);
     if (ql.isPCell(cy, cx)) {
-      if (matchCell(pawn_map[y][x], "piece", current_player_id)) {
+      if (matchCell(board.pawn[y][x], "piece", current_player_id)) {
         return;
       }
-      let pawn_map_: Grid = JSON.parse(JSON.stringify(pawn_map)); // deep copy
-      pawn_map_ = gmap(pawn_map_, (cell: Cell) =>
+      let pawn_: Grid = JSON.parse(JSON.stringify(board.pawn)); // deep copy
+      pawn_ = gmap(pawn_, (cell: Cell) =>
         matchCell(cell, "piece", current_player_id) ? Ghost : cell
       );
       pawn_position[current_player_id] = [y, x];
-      pawn_map_[y][x] = Piece(current_player_id, false);
-      pawn_map = pawn_map_;
+      pawn_[y][x] = Piece(current_player_id, false);
+      board.pawn = pawn_;
     } else if (ql.isVCell(cy, cx)) {
-      if (matchCell(vertical_wall_map[y][x], "piece", current_player_id)) {
+      if (matchCell(board.vertical_wall[y][x], "piece", current_player_id)) {
         return;
       }
-      let vertical_wall_map_ = Object.assign([], vertical_wall_map);
+      let vertical_wall_ = Object.assign([], board.vertical_wall);
       if (y === game_row_size - 1) y--;
-      vertical_wall_map_[y][x] = Piece(current_player_id, false);
-      vertical_wall_map = vertical_wall_map_;
+      vertical_wall_[y][x] = Piece(current_player_id, false);
+      board.vertical_wall = vertical_wall_;
     } else if (ql.isHCell(cy, cx)) {
-      if (matchCell(horizontal_wall_map[y][x], "piece", current_player_id)) {
+      if (matchCell(board.horizontal_wall[y][x], "piece", current_player_id)) {
         return;
       }
-      let horizontal_wall_map_ = Object.assign([], horizontal_wall_map);
+      let horizontal_wall_ = Object.assign([], board.horizontal_wall);
       if (x === game_row_size - 1) x--;
-      horizontal_wall_map_[y][x] = Piece(current_player_id, false);
-      horizontal_wall_map = horizontal_wall_map_;
+      horizontal_wall_[y][x] = Piece(current_player_id, false);
+      board.horizontal_wall = horizontal_wall_;
     }
     current_player_id = (current_player_id + 1) % game_player_size;
   }
@@ -59,9 +58,7 @@
   <HrQuoridorView
     {game_row_size}
     {current_player_id}
-    {pawn_map}
-    {vertical_wall_map}
-    {horizontal_wall_map}
+    {board}
     on:clickCell={clickCell}
   />
 </div>

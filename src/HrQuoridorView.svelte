@@ -2,18 +2,17 @@
   import { createEventDispatcher } from "svelte";
   import { quintOut } from "svelte/easing";
   import { crossfade, scale } from "svelte/transition";
-  import { Cell, HrQuoridorLayout } from "./HrQuoridorLayout";
+  import { Board, HrQuoridorLayout } from "./HrQuoridorLayout";
 
   export let game_row_size = 9;
   export let current_player_id = 0;
   export let option_same_wall_color = false;
   const ql = new HrQuoridorLayout(game_row_size);
 
-  export let pawn_map: Cell[][];
-  export let vertical_wall_map: Cell[][];
-  export let horizontal_wall_map: Cell[][];
-  $: vwall = vertical_wall_map; // for html
-  $: hwall = horizontal_wall_map;
+  export let board: Board;
+  $: pawn = board.pawn;
+  $: vwall = board.vertical_wall;
+  $: hwall = board.horizontal_wall;
 
   // HANDLER
   const dispatch = createEventDispatcher();
@@ -73,13 +72,13 @@
           {#if !ql.isMargin(y) && !ql.isMargin(x)}
             <div class="cell" style="height: 100%; width:100%;">
               {#if ql.isPCell(y, x)}
-                {#if ql.getPawn(pawn_map, y, x).kind === "piece"}
+                {#if ql.getPawn(pawn, y, x).kind === "piece"}
                   <div
-                    class="pawn player{ql.getPawn(pawn_map, y, x).player_id}"
-                    in:receive={{ key: ql.getPawn(pawn_map, y, x).player_id }}
-                    out:send={{ key: ql.getPawn(pawn_map, y, x).player_id }}
+                    class="pawn player{ql.getPawn(pawn, y, x).player_id}"
+                    in:receive={{ key: ql.getPawn(pawn, y, x).player_id }}
+                    out:send={{ key: ql.getPawn(pawn, y, x).player_id }}
                   />
-                {:else if ql.getPawn(pawn_map, y, x).kind === "ghost"}
+                {:else if ql.getPawn(pawn, y, x).kind === "ghost"}
                   <div class="ghost pawn player{current_player_id}" />
                 {/if}
               {:else if ql.isVCell(y, x)}
