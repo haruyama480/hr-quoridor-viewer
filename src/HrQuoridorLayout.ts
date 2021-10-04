@@ -33,7 +33,7 @@ export class HrQuoridorLayout {
 
   public initState(): {
     pawn_map: Grid;
-    pawn_position: [number, number][];
+    pawn_position: [number, number][]; // supports only 2-player game
     vertical_wall_map: Grid;
     horizontal_wall_map: Grid;
   } {
