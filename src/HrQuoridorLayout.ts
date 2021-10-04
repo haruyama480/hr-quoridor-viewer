@@ -18,6 +18,7 @@ export const matchCell: (c1: Cell, kind: CellType, pid: number) => boolean = (
   return c1.kind === kind && c1.player_id === pid;
 };
 
+export type Position = [number, number];
 export type Grid = Cell[][];
 export const gmap: (grid: Grid, f: (Cell) => Cell) => Grid = (grid, f) => {
   return grid.map((row) => row.map((cell) => f(cell)));
@@ -39,15 +40,15 @@ export class HrQuoridorLayout {
 
   public initState(): {
     board: Board;
-    pawn_position: [number, number][]; // supports only 2-player game
+    current_pawn: Position[];
   } {
     const n = this.game_size;
     const pawn: Grid = [...Array(n)].map(() => Array(n).fill(Ghost)); // size(n,n)
     const center = Math.floor(n / 2);
-    const pawn_position = [
+    const current_pawn: Position[] = [
       [0, center],
       [n - 1, center],
-    ];
+    ]; // supports only 2-player game
     pawn[0][center] = Piece(0, false);
     pawn[n - 1][center] = Piece(1, false);
 
@@ -66,7 +67,7 @@ export class HrQuoridorLayout {
 
     return {
       board,
-      pawn_position,
+      current_pawn,
     };
   }
 

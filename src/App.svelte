@@ -7,6 +7,7 @@
     HrQuoridorLayout,
     matchCell,
     Piece,
+    Position,
   } from "./HrQuoridorLayout";
   import HrQuoridorView from "./HrQuoridorView.svelte";
 
@@ -15,13 +16,14 @@
   const ql = new HrQuoridorLayout(game_row_size);
 
   let current_player_id = 0; // 0-index
-  let { board, pawn_position } = ql.initState();
+  let { board, current_pawn } = ql.initState();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function clickCell(event: any): void {
     const cy = event.detail.cy;
     const cx = event.detail.cx;
-    let [y, x] = ql.toIndex(cy, cx);
+    const next: Position = ql.toIndex(cy, cx);
+    let [y, x] = next;
     if (ql.isPCell(cy, cx)) {
       if (matchCell(board.pawn[y][x], "piece", current_player_id)) {
         return;
@@ -30,7 +32,7 @@
       pawn_ = gmap(pawn_, (cell: Cell) =>
         matchCell(cell, "piece", current_player_id) ? Ghost : cell
       );
-      pawn_position[current_player_id] = [y, x];
+      current_pawn[current_player_id] = [y, x];
       pawn_[y][x] = Piece(current_player_id, false);
       board.pawn = pawn_;
     } else if (ql.isVCell(cy, cx)) {
