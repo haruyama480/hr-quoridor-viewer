@@ -1,13 +1,12 @@
 <script lang="ts">
+  import type { Grid, Position } from "./HrQuoridorLayout";
   import {
     Cell,
     Ghost,
     gmap,
-    Grid,
     HrQuoridorLayout,
     matchCell,
     Piece,
-    Position,
   } from "./HrQuoridorLayout";
   import HrQuoridorView from "./HrQuoridorView.svelte";
 
