@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		// すべての ctest ジョブを実行する前に必要。
+		{
+			"type": "shell",
+			"label": "npm run dev",
+			"command": "npm run dev",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+		},
+  ]
+}
