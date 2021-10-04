@@ -7,6 +7,7 @@
     gmap,
     HrQuoridorLayout,
     matchCell,
+    None,
     Piece,
   } from "./HrQuoridorLayout";
   import HrQuoridorView from "./HrQuoridorView.svelte";
@@ -14,13 +15,27 @@
   const game_row_size = 9;
   const game_player_size = 2;
   const ql = new HrQuoridorLayout(game_row_size);
+  $: N = game_row_size;
 
-  let current_player_id = 0; // 0-index
+  let current_player_id = -1; // 0-index
   let { board, current_pawn, goal } = ql.initState();
 
   function nextTurn() {
     current_player_id = (current_player_id + 1) % game_player_size;
+    for (let y = 0; y < N; y++) {
+      for (let x = 0; x < N; x++) {
+        let cell = board.pawn[y][x];
+        if (cell.kind === "none" || cell.kind === "ghost") {
+          cell = validatePawn(current_pawn[current_player_id], [y, x], board)
+            ? Ghost
+            : None;
+        }
+        board.pawn[y][x] = cell;
+      }
+    }
   }
+
+  nextTurn();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function clickCell(event: any): void {
