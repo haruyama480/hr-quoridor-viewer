@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { validatePawn, validateWall } from "./HrQuoridorGameLogic";
   import type { Grid, Position } from "./HrQuoridorLayout";
   import {
     Cell,
@@ -17,6 +18,10 @@
   let current_player_id = 0; // 0-index
   let { board, current_pawn } = ql.initState();
 
+  function nextTurn() {
+    current_player_id = (current_player_id + 1) % game_player_size;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function clickCell(event: any): void {
     const cy = event.detail.cy;
@@ -24,7 +29,7 @@
     const next: Position = ql.toIndex(cy, cx);
     let [y, x] = next;
     if (ql.isPCell(cy, cx)) {
-      if (matchCell(board.pawn[y][x], "piece", current_player_id)) {
+      if (!validatePawn(current_pawn[current_player_id], next, board)) {
         return;
       }
       let pawn_: Grid = JSON.parse(JSON.stringify(board.pawn)); // deep copy
@@ -34,24 +39,29 @@
       current_pawn[current_player_id] = [y, x];
       pawn_[y][x] = Piece(current_player_id, false);
       board.pawn = pawn_;
-    } else if (ql.isVCell(cy, cx)) {
+
+      nextTurn();
+      return;
+    }
+
+    let board_ = Object.assign([], board);
+    if (ql.isVCell(cy, cx)) {
       if (matchCell(board.vertical_wall[y][x], "piece", current_player_id)) {
         return;
       }
-      let vertical_wall_ = Object.assign([], board.vertical_wall);
       if (y === game_row_size - 1) y--;
-      vertical_wall_[y][x] = Piece(current_player_id, false);
-      board.vertical_wall = vertical_wall_;
+      board_.vertical_wall[y][x] = Piece(current_player_id, false);
     } else if (ql.isHCell(cy, cx)) {
       if (matchCell(board.horizontal_wall[y][x], "piece", current_player_id)) {
         return;
       }
-      let horizontal_wall_ = Object.assign([], board.horizontal_wall);
       if (x === game_row_size - 1) x--;
-      horizontal_wall_[y][x] = Piece(current_player_id, false);
-      board.horizontal_wall = horizontal_wall_;
+      board_.horizontal_wall[y][x] = Piece(current_player_id, false);
     }
-    current_player_id = (current_player_id + 1) % game_player_size;
+    if (validateWall(current_pawn, [], board)) {
+      board = board_;
+      nextTurn();
+    }
   }
 </script>
 
