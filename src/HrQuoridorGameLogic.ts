@@ -5,22 +5,22 @@ function isPiece(cell: Cell) {
 }
 
 function canMoveUp(y: number, x: number, board: Board): boolean {
-  const n = board.pawn.length;
-  if (y >= n - 1) {
+  const N = board.pawn.length;
+  if (y >= N - 1) {
     return false;
   }
   let movable = true;
   if (x > 0) {
     movable = movable && !isPiece(board.horizontal_wall[y][x - 1]);
   }
-  if (x < n - 1) {
+  if (x < N - 1) {
     movable = movable && !isPiece(board.horizontal_wall[y][x]);
   }
   return movable;
 }
 
 function canMoveDown(y: number, x: number, board: Board): boolean {
-  const n = board.pawn.length;
+  const N = board.pawn.length;
   if (y === 0) {
     return false;
   }
@@ -28,29 +28,29 @@ function canMoveDown(y: number, x: number, board: Board): boolean {
   if (x > 0) {
     movable = movable && !isPiece(board.horizontal_wall[y - 1][x - 1]);
   }
-  if (x < n - 1) {
+  if (x < N - 1) {
     movable = movable && !isPiece(board.horizontal_wall[y - 1][x]);
   }
   return movable;
 }
 
 function canMoveRight(y: number, x: number, board: Board): boolean {
-  const n = board.pawn.length;
-  if (x === n - 1) {
+  const N = board.pawn.length;
+  if (x === N - 1) {
     return false;
   }
   let movable = true;
   if (y > 0) {
     movable = movable && !isPiece(board.vertical_wall[y - 1][x]);
   }
-  if (y < n - 1) {
+  if (y < N - 1) {
     movable = movable && !isPiece(board.vertical_wall[y][x]);
   }
   return movable;
 }
 
 function canMoveLeft(y: number, x: number, board: Board): boolean {
-  const n = board.pawn.length;
+  const N = board.pawn.length;
   if (x === 0) {
     return false;
   }
@@ -58,7 +58,7 @@ function canMoveLeft(y: number, x: number, board: Board): boolean {
   if (y > 0) {
     movable = movable && !isPiece(board.vertical_wall[y - 1][x - 1]);
   }
-  if (y < n - 1) {
+  if (y < N - 1) {
     movable = movable && !isPiece(board.vertical_wall[y][x - 1]);
   }
   return movable;
@@ -71,7 +71,7 @@ export const validatePawn: (
 ) => boolean = (pre, post, board) => {
   if (
     (pre[0] === post[0] && pre[1] === post[1]) ||
-    board.pawn[post[0]][post[1]].kind === "piece"
+    isPiece(board.pawn[post[0]][post[1]])
   ) {
     return false;
   }
@@ -103,7 +103,7 @@ export const validatePawn: (
         return (
           canMoveRight(p1[0], p1[1], board) &&
           canMoveRight(p1[0], p1[1] + 1, board) &&
-          board.pawn[p1[0]][p1[1] + 1].kind === "piece"
+          isPiece(board.pawn[p1[0]][p1[1] + 1])
         );
       } else {
         if (!(p1[0] <= p2[0])) {
@@ -112,28 +112,29 @@ export const validatePawn: (
         return (
           canMoveUp(p1[0], p1[1], board) &&
           canMoveUp(p1[0] + 1, p1[1], board) &&
-          board.pawn[p1[0] + 1][p1[1]].kind === "piece"
+          isPiece(board.pawn[p1[0] + 1][p1[1]])
         );
       }
     } else {
       const doubleUp =
         canMoveUp(p1[0], p1[1], board) &&
         !canMoveUp(p1[0] + 1, p1[1], board) &&
-        board.pawn[p1[0] + 1][p1[1]].kind === "piece";
+        isPiece(board.pawn[p1[0] + 1][p1[1]]);
       const doubleDown =
         canMoveDown(p1[0], p1[1], board) &&
         !canMoveDown(p1[0] - 1, p1[1], board) &&
-        board.pawn[p1[0] - 1][p1[1]].kind === "piece";
+        isPiece(board.pawn[p1[0] - 1][p1[1]]);
       const doubleRight =
         canMoveRight(p1[0], p1[1], board) &&
         !canMoveRight(p1[0], p1[1] + 1, board) &&
-        board.pawn[p1[0]][p1[1] + 1].kind === "piece";
+        isPiece(board.pawn[p1[0]][p1[1] + 1]);
       const doubleLeft =
         canMoveLeft(p1[0], p1[1], board) &&
         !canMoveLeft(p1[0], p1[1] - 1, board) &&
-        board.pawn[p1[0]][p1[1] - 1].kind === "piece";
+        isPiece(board.pawn[p1[0]][p1[1] - 1]);
       if (p1[1] < p2[1]) {
         if (p1[0] < p2[0]) {
+          // 1: pre, 2: post position
           // _2
           // 1_
           return (
@@ -175,45 +176,43 @@ export const validateWall: (
   goal: Position[][],
   board: Board
 ) => boolean = (player, goal, board) => {
-  // validate no cross wall
   const N = board.pawn.length;
   for (let y = 0; y < N - 1; y++) {
     for (let x = 0; x < N - 1; x++) {
+      // validate no cross
       if (
-        board.vertical_wall[y][x].kind === "piece" &&
-        board.horizontal_wall[y][x].kind === "piece"
+        isPiece(board.vertical_wall[y][x]) &&
+        isPiece(board.horizontal_wall[y][x])
       ) {
         return false;
       }
-    }
-  }
-  for (let y = 0; y < N - 1; y++) {
-    for (let x = 0; x < N - 1; x++) {
+      // validate no vertical overlap
       if (y !== N - 2) {
         if (
-          board.vertical_wall[y][x].kind === "piece" &&
-          board.vertical_wall[y + 1][x].kind === "piece"
+          isPiece(board.vertical_wall[y][x]) &&
+          isPiece(board.vertical_wall[y + 1][x])
         ) {
           return false;
         }
       }
+      // validate no horizontal overlap
       if (x !== N - 2) {
         if (
-          board.horizontal_wall[y][x].kind === "piece" &&
-          board.horizontal_wall[y][x + 1].kind === "piece"
+          isPiece(board.horizontal_wall[y][x]) &&
+          isPiece(board.horizontal_wall[y][x + 1])
         ) {
           return false;
         }
       }
     }
   }
-  // validate no goal
-  let done: boolean[][];
+  // validate all players can reach their goals
+  let reached: boolean[][];
   function dfs(y: number, x: number) {
-    if (done[y][x]) {
+    if (reached[y][x]) {
       return;
     }
-    done[y][x] = true;
+    reached[y][x] = true;
     if (canMoveUp(y, x, board)) {
       dfs(y + 1, x);
     }
@@ -228,18 +227,18 @@ export const validateWall: (
     }
   }
   for (let i = 0; i < player.length; i++) {
-    let valid = false;
+    let has_goal = false;
     const posi = player[i];
     const goal_posi = goal[i];
-    done = [...Array(N)].map(() => Array(N).fill(false));
-    dfs(posi[0], posi[1]);
+    reached = [...Array(N)].map(() => Array(N).fill(false));
+    dfs(posi[0], posi[1]); // calc reached
     for (let j = 0; j < goal_posi.length; j++) {
       const [gy, gx] = goal_posi[j];
-      if (done[gy][gx] === true) {
-        valid = true;
+      if (reached[gy][gx] === true) {
+        has_goal = true;
       }
     }
-    if (!valid) {
+    if (!has_goal) {
       return false;
     }
   }
