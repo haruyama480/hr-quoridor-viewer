@@ -247,8 +247,9 @@ export function validateWall(
 }
 
 export function updateGhost(current: Position, board: Board): void {
-  for (let y = 0; y < this.grid_size; y++) {
-    for (let x = 0; x < this.grid_size; x++) {
+  const N = board.pawn.length;
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
       if (board.pawn[y][x].kind !== "piece") {
         board.pawn[y][x] = validatePawn(current, [y, x], board) ? Ghost : None;
       }
