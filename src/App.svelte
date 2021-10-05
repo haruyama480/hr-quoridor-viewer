@@ -2,4 +2,4 @@
   import SimpleBoard from "./sample/SimpleBoard.svelte";
 </script>
 
-<SimpleBoard grid_size={3} />
+<SimpleBoard grid_size={3} board_size="200px" />

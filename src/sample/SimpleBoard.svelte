@@ -8,9 +8,10 @@
   import { HrQuoridorLayout, None, Piece } from "../HrQuoridorLayout";
   import HrQuoridorView from "../HrQuoridorView.svelte";
 
+  export let board_size = "500px";
   export let grid_size = 9;
-  const game_player_size = 2;
 
+  const game_player_size = 2;
   const ql = new HrQuoridorLayout(grid_size);
 
   let current_player_id = -1; // 0-index
@@ -67,7 +68,7 @@
   }
 </script>
 
-<div style="height: 500px; width:500px; margin: 0px; padding: 0px;">
+<div style="--board-area: {board_size}">
   <HrQuoridorView
     {grid_size}
     {current_player_id}
@@ -75,3 +76,10 @@
     on:clickCell={clickCell}
   />
 </div>
+
+<style>
+  div {
+    height: var(--board-area);
+    width: var(--board-area);
+  }
+</style>
