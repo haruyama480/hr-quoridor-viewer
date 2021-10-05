@@ -1,7 +1,11 @@
 <script lang="ts">
-  import { validatePawn, validateWall } from "./HrQuoridorGameLogic";
+  import {
+    updateGhost,
+    validatePawn,
+    validateWall,
+  } from "./HrQuoridorGameLogic";
   import type { Grid, Position } from "./HrQuoridorLayout";
-  import { Ghost, HrQuoridorLayout, None, Piece } from "./HrQuoridorLayout";
+  import { HrQuoridorLayout, None, Piece } from "./HrQuoridorLayout";
   import HrQuoridorView from "./HrQuoridorView.svelte";
 
   const grid_size = 9;
@@ -13,19 +17,7 @@
 
   function nextTurn() {
     current_player_id = (current_player_id + 1) % game_player_size;
-    for (let y = 0; y < grid_size; y++) {
-      for (let x = 0; x < grid_size; x++) {
-        if (board.pawn[y][x].kind !== "piece") {
-          board.pawn[y][x] = validatePawn(
-            current_pawn[current_player_id],
-            [y, x],
-            board
-          )
-            ? Ghost
-            : None;
-        }
-      }
-    }
+    updateGhost(current_pawn[current_player_id], board);
   }
 
   nextTurn();
