@@ -27,11 +27,11 @@ export interface Board {
 }
 
 export class HrQuoridorLayout {
-  game_size: number;
+  grid_size: number;
   cell_size: number;
-  constructor(game_size: number) {
-    this.game_size = game_size;
-    this.cell_size = game_size * 2 + 1;
+  constructor(grid_size: number) {
+    this.grid_size = grid_size;
+    this.cell_size = grid_size * 2 + 1;
   }
 
   public initState(): {
@@ -39,7 +39,7 @@ export class HrQuoridorLayout {
     current_pawn: Position[];
     goal: Position[][]; // goal[i]: all user_i's goals
   } {
-    const n = this.game_size;
+    const n = this.grid_size;
     const pawn: Grid = [...Array(n)].map(() => Array(n).fill(Ghost)); // size(n,n)
     const center = Math.floor(n / 2);
     const current_pawn: Position[] = [
@@ -79,7 +79,7 @@ export class HrQuoridorLayout {
   }
   public toIndex(cy: number, cx: number): [number, number] {
     // PCell, VCell, HCellをすべて0始まりのindexに
-    // marginは、-1 や game_size-1 になったりする
+    // marginは、-1 や grid_size-1 になったりする
     const y = Math.floor((cy - 1) / 2);
     const x = Math.floor((cx - 1) / 2);
     return [y, x];
@@ -108,7 +108,7 @@ export class HrQuoridorLayout {
   public getVerticalWall(map: Grid, cy: number, cx: number): Cell {
     // eslint-disable-next-line prefer-const
     let [y, x] = this.toIndex(cy, cx);
-    if (!this.isVCell(cy, cx) || y === this.game_size - 1) return None;
+    if (!this.isVCell(cy, cx) || y === this.grid_size - 1) return None;
     return map[y][x];
   }
 
@@ -119,7 +119,7 @@ export class HrQuoridorLayout {
   public getHorizontalWall(map: Grid, cy: number, cx: number): Cell {
     // eslint-disable-next-line prefer-const
     let [y, x] = this.toIndex(cy, cx);
-    if (!this.isHCell(cy, cx) || x === this.game_size - 1) return None;
+    if (!this.isHCell(cy, cx) || x === this.grid_size - 1) return None;
     return map[y][x];
   }
 }
