@@ -98,8 +98,6 @@
                       option_same_wall_color}
                     class:player1={current_player_id === 1 &&
                       !option_same_wall_color}
-                    class:lastHorizontalWall={x === ql.cell_size - 2}
-                    class:lastVerticalWall={y === ql.cell_size - 2}
                   />
                 {/if}
               {:else if ql.isHCell(y, x)}
@@ -119,7 +117,6 @@
                       option_same_wall_color}
                     class:player1={current_player_id === 1 &&
                       !option_same_wall_color}
-                    class:lastHorizontalWall={x === ql.cell_size - 2}
                   />
                 {/if}
               {/if}
@@ -225,14 +222,6 @@
     width: 220%;
     bottom: 7%;
     height: 86%;
-  }
-  .verticalWall.lastVerticalWall {
-    bottom: unset;
-    top: 0%;
-  }
-  .horizontalWall.lastHorizontalWall {
-    left: unset;
-    right: 0%;
   }
 
   .ghost {

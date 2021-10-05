@@ -64,16 +64,16 @@
 
     let board_ = JSON.parse(JSON.stringify(board)); // deep copy
     if (ql.isVCell(cy, cx)) {
+      if (y === game_row_size - 1) return;
       if (matchCell(board.vertical_wall[y][x], "piece", current_player_id)) {
         return;
       }
-      if (y === game_row_size - 1) y--;
       board_.vertical_wall[y][x] = Piece(current_player_id, false);
     } else if (ql.isHCell(cy, cx)) {
+      if (x === game_row_size - 1) return;
       if (matchCell(board.horizontal_wall[y][x], "piece", current_player_id)) {
         return;
       }
-      if (x === game_row_size - 1) x--;
       board_.horizontal_wall[y][x] = Piece(current_player_id, false);
     }
     if (validateWall(current_pawn, goal, board_)) {
