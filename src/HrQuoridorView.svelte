@@ -4,10 +4,10 @@
   import { crossfade, scale } from "svelte/transition";
   import { Board, HrQuoridorLayout } from "./HrQuoridorLayout";
 
-  export let game_row_size = 9;
+  export let game_grid_size = 9;
   export let current_player_id = 0;
   export let option_same_wall_color = false;
-  const ql = new HrQuoridorLayout(game_row_size);
+  const ql = new HrQuoridorLayout(game_grid_size);
 
   export let board: Board;
   $: pawn = board.pawn;
