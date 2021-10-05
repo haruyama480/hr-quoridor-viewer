@@ -6,23 +6,19 @@ export interface Cell {
 }
 export const None: Cell = { kind: "none", player_id: -1, notable: false };
 export const Ghost: Cell = { kind: "ghost", player_id: -1, notable: false };
-export const Piece: (pid: number, ntb: boolean) => Cell = (pid, ntb) => {
+export function Piece(pid: number, ntb: boolean): Cell {
   return { kind: "piece", player_id: pid, notable: ntb };
-};
-export const matchCell: (c1: Cell, kind: CellType, pid: number) => boolean = (
-  c1,
-  kind,
-  pid
-) => {
+}
+export function matchCell(c1: Cell, kind: CellType, pid: number): boolean {
   if (kind === "none" || kind === "ghost") return c1.kind === kind;
   return c1.kind === kind && c1.player_id === pid;
-};
+}
 
 export type Position = [number, number];
 export type Grid = Cell[][];
-export const gmap: (grid: Grid, f: (Cell) => Cell) => Grid = (grid, f) => {
+export function gmap(grid: Grid, f: (Cell) => Cell): Grid {
   return grid.map((row) => row.map((cell) => f(cell)));
-};
+}
 
 export interface Board {
   pawn: Grid;

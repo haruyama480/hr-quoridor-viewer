@@ -64,11 +64,11 @@ function canMoveLeft(y: number, x: number, board: Board): boolean {
   return movable;
 }
 
-export const validatePawn: (
+export function validatePawn(
   pre: Position,
   post: Position,
   board: Board
-) => boolean = (pre, post, board) => {
+): boolean {
   if (
     (pre[0] === post[0] && pre[1] === post[1]) ||
     isPiece(board.pawn[post[0]][post[1]])
@@ -169,13 +169,13 @@ export const validatePawn: (
     }
   }
   return false;
-};
+}
 
-export const validateWall: (
+export function validateWall(
   player: Position[],
   goal: Position[][],
   board: Board
-) => boolean = (player, goal, board) => {
+): boolean {
   const N = board.pawn.length;
   for (let y = 0; y < N - 1; y++) {
     for (let x = 0; x < N - 1; x++) {
@@ -243,4 +243,4 @@ export const validateWall: (
     }
   }
   return true;
-};
+}
