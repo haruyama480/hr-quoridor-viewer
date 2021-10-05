@@ -175,7 +175,73 @@ export const validateWall: (
   goal: Position[][],
   board: Board
 ) => boolean = (player, goal, board) => {
-  // TODO: validate no cross wall
-  // TODO: validate no goal
+  // validate no cross wall
+  const N = board.pawn.length;
+  for (let y = 0; y < N - 1; y++) {
+    for (let x = 0; x < N - 1; x++) {
+      if (
+        board.vertical_wall[y][x].kind === "piece" &&
+        board.horizontal_wall[y][x].kind === "piece"
+      ) {
+        return false;
+      }
+    }
+  }
+  for (let y = 0; y < N - 1; y++) {
+    for (let x = 0; x < N - 1; x++) {
+      if (y !== N - 2) {
+        if (
+          board.vertical_wall[y][x].kind === "piece" &&
+          board.vertical_wall[y + 1][x].kind === "piece"
+        ) {
+          return false;
+        }
+      }
+      if (x !== N - 2) {
+        if (
+          board.horizontal_wall[y][x].kind === "piece" &&
+          board.horizontal_wall[y][x + 1].kind === "piece"
+        ) {
+          return false;
+        }
+      }
+    }
+  }
+  // validate no goal
+  let done: boolean[][];
+  function dfs(y: number, x: number) {
+    if (done[y][x]) {
+      return;
+    }
+    done[y][x] = true;
+    if (canMoveUp(y, x, board)) {
+      dfs(y + 1, x);
+    }
+    if (canMoveDown(y, x, board)) {
+      dfs(y - 1, x);
+    }
+    if (canMoveRight(y, x, board)) {
+      dfs(y, x + 1);
+    }
+    if (canMoveLeft(y, x, board)) {
+      dfs(y, x - 1);
+    }
+  }
+  for (let i = 0; i < player.length; i++) {
+    let valid = false;
+    const posi = player[i];
+    const goal_posi = goal[i];
+    done = [...Array(N)].map(() => Array(N).fill(false));
+    dfs(posi[0], posi[1]);
+    for (let j = 0; j < goal_posi.length; j++) {
+      const [gy, gx] = goal_posi[j];
+      if (done[gy][gx] === true) {
+        valid = true;
+      }
+    }
+    if (!valid) {
+      return false;
+    }
+  }
   return true;
 };
