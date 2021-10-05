@@ -61,6 +61,7 @@
     if (validateWall(current_pawn, goal, board_)) {
       board = board_;
       nextTurn();
+      return;
     }
   }
 </script>
