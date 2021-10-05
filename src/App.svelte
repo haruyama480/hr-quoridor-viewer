@@ -25,12 +25,15 @@
     for (let y = 0; y < N; y++) {
       for (let x = 0; x < N; x++) {
         let cell = board.pawn[y][x];
-        if (cell.kind === "none" || cell.kind === "ghost") {
-          cell = validatePawn(current_pawn[current_player_id], [y, x], board)
+        if (cell.kind !== "piece") {
+          board.pawn[y][x] = validatePawn(
+            current_pawn[current_player_id],
+            [y, x],
+            board
+          )
             ? Ghost
             : None;
         }
-        board.pawn[y][x] = cell;
       }
     }
   }
