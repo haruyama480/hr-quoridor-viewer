@@ -9,10 +9,6 @@ export const Ghost: Cell = { kind: "ghost", player_id: -1, notable: false };
 export function Piece(pid: number, ntb: boolean): Cell {
   return { kind: "piece", player_id: pid, notable: ntb };
 }
-export function matchCell(c1: Cell, kind: CellType, pid: number): boolean {
-  if (kind === "none" || kind === "ghost") return c1.kind === kind;
-  return c1.kind === kind && c1.player_id === pid;
-}
 
 export type Position = [number, number];
 export type Grid = Cell[][];
