@@ -246,7 +246,7 @@ export function validateWall(
   return true;
 }
 
-export function updateGhost(current: Position, board: Board): void {
+export function updatePawnGhost(current: Position, board: Board): void {
   const N = board.pawn.length;
   for (let y = 0; y < N; y++) {
     for (let x = 0; x < N; x++) {

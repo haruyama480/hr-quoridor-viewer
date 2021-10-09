@@ -1,6 +1,6 @@
 <script lang="ts">
   import {
-    updateGhost,
+    updatePawnGhost,
     validatePawn,
     validateWall,
   } from "../HrQuoridorGameLogic";
@@ -19,7 +19,7 @@
 
   function nextTurn() {
     current_player_id = (current_player_id + 1) % game_player_size;
-    updateGhost(current_pawn[current_player_id], board);
+    updatePawnGhost(current_pawn[current_player_id], board);
   }
 
   nextTurn();
