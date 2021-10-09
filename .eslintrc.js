@@ -1,14 +1,15 @@
 module.exports = {
-  parser: '@typescript-eslint/parser', // add the TypeScript parser
+  parser: "@typescript-eslint/parser", // add the TypeScript parser
   plugins: [
-    'svelte3',
-    '@typescript-eslint' // add the TypeScript plugin
+    "svelte3",
+    "@typescript-eslint", // add the TypeScript plugin
   ],
-  overrides: [ // this stays the same
+  overrides: [
+    // this stays the same
     {
-      files: ['**/*.svelte'],
-      processor: 'svelte3/svelte3'
-    }
+      files: ["**/*.svelte"],
+      processor: "svelte3/svelte3",
+    },
   ],
   rules: {
     // ...
@@ -16,20 +17,17 @@ module.exports = {
   settings: {
     // 'svelte3/typescript': () => require('typescript'), // pass the TypeScript package to the Svelte plugin
     // OR
-    'svelte3/typescript': true, // load TypeScript as peer dependency
+    "svelte3/typescript": true, // load TypeScript as peer dependency
   },
 
   env: {
-      "browser": true,
-      "es2021": true,
-      "node": true
+    browser: true,
+    es2021: true,
+    node: true,
   },
-  extends: [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended"
-  ],
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   parserOptions: {
-      "ecmaVersion": 12,
-      "sourceType": "module"
+    ecmaVersion: 12,
+    sourceType: "module",
   },
 };
