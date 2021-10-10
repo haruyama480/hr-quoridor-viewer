@@ -1,6 +1,6 @@
 import { updatePawnGhost, validatePawn, validateWall } from "./GameLogicCommon";
-import type { Board, Grid, GridType, Position } from "./Layout";
-import { Ghost, None, Piece } from "./Layout";
+import type { Board, Grid, GridType, Position } from "./Model";
+import { Ghost, None, Piece } from "./Model";
 
 export class Game2p {
   grid_size: number;

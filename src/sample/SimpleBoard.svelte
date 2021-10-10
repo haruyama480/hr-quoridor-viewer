@@ -1,7 +1,7 @@
 <script lang="ts">
   import BoardView from "../BoardView.svelte";
   import { Game2p } from "../GameLogic2p";
-  import type { GridType, Position } from "../Layout";
+  import type { GridType, Position } from "../Model";
 
   export let board_size = "500px";
   export let grid_size = 9;

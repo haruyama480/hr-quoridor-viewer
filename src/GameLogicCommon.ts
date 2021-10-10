@@ -1,5 +1,5 @@
-import type { Board, Cell, Position } from "./Layout";
-import { Ghost, None } from "./Layout";
+import type { Board, Cell, Position } from "./Model";
+import { Ghost, None } from "./Model";
 
 function isPiece(cell: Cell) {
   return cell.kind === "piece";

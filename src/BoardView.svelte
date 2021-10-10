@@ -2,7 +2,8 @@
   import { createEventDispatcher } from "svelte";
   import { quintOut } from "svelte/easing";
   import { crossfade, scale } from "svelte/transition";
-  import { Board, GridLayout, GridType, Position } from "./Layout";
+  import { GridLayout } from "./Layout";
+  import type { Board, GridType, Position } from "./Model";
 
   export let grid_size = 9;
   export let current_player_id = 0;
