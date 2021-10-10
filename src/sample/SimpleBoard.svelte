@@ -1,18 +1,21 @@
 <script lang="ts">
   import BoardView from "../BoardView.svelte";
-  import { updatePawnGhost, validatePawn, validateWall } from "../GameLogicCommon";
+  import { initState } from "../GameLogic2p";
+  import {
+    updatePawnGhost,
+    validatePawn,
+    validateWall,
+  } from "../GameLogicCommon";
   import type { Grid, GridType, Position } from "../Layout";
-  import { GridLayout, None, Piece } from "../Layout";
+  import { None, Piece } from "../Layout";
 
   export let board_size = "500px";
   export let grid_size = 9;
 
   const game_player_size = 2;
-  const ql = new GridLayout(grid_size);
 
   let current_player_id = -1; // 0-index
-  let { board, current_pawn, goal } = ql.initState();
-
+  let { board, current_pawn, goal } = initState(grid_size);
   function nextTurn() {
     current_player_id = (current_player_id + 1) % game_player_size;
     updatePawnGhost(current_pawn[current_player_id], board);
