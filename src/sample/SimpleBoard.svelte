@@ -1,9 +1,5 @@
 <script lang="ts">
-  import {
-    updatePawnGhost,
-    validatePawn,
-    validateWall,
-  } from "../HrQuoridorGameLogic";
+  import { updatePawnGhost, validatePawn, validateWall } from "../GameLogic";
   import HrQuoridorView from "../HrQuoridorView.svelte";
   import type { Grid, GridType, Position } from "../Layout";
   import { GridLayout, None, Piece } from "../Layout";
