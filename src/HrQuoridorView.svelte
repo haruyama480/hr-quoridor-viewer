@@ -23,8 +23,13 @@
   const dispatch = createEventDispatcher();
   function hoverCell(cy: number, cx: number): () => void {
     return () => {
-      dispatch("h?ovearCell", {
-        cx,
+      let gridType: GridType;
+      let nextPosition: Position;
+      [gridType, nextPosition] = ql.toGridIndex(cy, cx);
+      dispatch("hoverCell", {
+        gridType,
+        nextPosition,
+        cx, // to handle clicked margin
         cy,
       });
     };
