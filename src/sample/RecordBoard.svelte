@@ -41,6 +41,7 @@
 </div>
 <button on:click={nextStep}> next </button>
 <button on:click={previousStep}> previous </button>
+<p>{game.dumpHistory()}</p>
 
 <style>
   div {
