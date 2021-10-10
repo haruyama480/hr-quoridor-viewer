@@ -1,6 +1,7 @@
 import type { Cell, Grid, GridType, Position } from "./Model";
 import { HWall, None, Pawn, UNKNOWN, VWall } from "./Model";
 
+// helper class which handles between HTML element index and grid index
 export class GridLayout {
   grid_size: number;
   cell_size: number;
