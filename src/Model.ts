@@ -1,6 +1,6 @@
-export type CellType = "none" | "ghost" | "piece";
+export type ViewType = "none" | "ghost" | "piece";
 export interface Cell {
-  kind: CellType;
+  kind: ViewType;
   player_id: number;
   notable: boolean;
 }
