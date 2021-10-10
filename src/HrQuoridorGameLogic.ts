@@ -1,5 +1,5 @@
-import type { Board, Cell, Position } from "./HrQuoridorLayout";
-import { Ghost, None } from "./HrQuoridorLayout";
+import type { Board, Cell, Position } from "./Layout";
+import { Ghost, None } from "./Layout";
 
 function isPiece(cell: Cell) {
   return cell.kind === "piece";

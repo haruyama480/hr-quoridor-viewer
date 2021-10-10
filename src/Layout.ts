@@ -31,7 +31,7 @@ export interface Board {
   horizontal_wall: Grid;
 }
 
-export class HrQuoridorLayout {
+export class GridLayout {
   grid_size: number;
   cell_size: number;
   constructor(grid_size: number) {

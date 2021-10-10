@@ -2,17 +2,12 @@
   import { createEventDispatcher } from "svelte";
   import { quintOut } from "svelte/easing";
   import { crossfade, scale } from "svelte/transition";
-  import {
-    Board,
-    GridType,
-    HrQuoridorLayout,
-    Position,
-  } from "./HrQuoridorLayout";
+  import { Board, GridLayout, GridType, Position } from "./Layout";
 
   export let grid_size = 9;
   export let current_player_id = 0;
   export let option_same_wall_color = false;
-  const ql = new HrQuoridorLayout(grid_size);
+  const ql = new GridLayout(grid_size);
 
   export let board: Board;
   $: pawn = board.pawn;

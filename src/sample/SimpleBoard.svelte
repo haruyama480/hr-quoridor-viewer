@@ -4,15 +4,15 @@
     validatePawn,
     validateWall,
   } from "../HrQuoridorGameLogic";
-  import type { Grid, GridType, Position } from "../HrQuoridorLayout";
-  import { HrQuoridorLayout, None, Piece } from "../HrQuoridorLayout";
   import HrQuoridorView from "../HrQuoridorView.svelte";
+  import type { Grid, GridType, Position } from "../Layout";
+  import { GridLayout, None, Piece } from "../Layout";
 
   export let board_size = "500px";
   export let grid_size = 9;
 
   const game_player_size = 2;
-  const ql = new HrQuoridorLayout(grid_size);
+  const ql = new GridLayout(grid_size);
 
   let current_player_id = -1; // 0-index
   let { board, current_pawn, goal } = ql.initState();
