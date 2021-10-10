@@ -1,6 +1,6 @@
 <script lang="ts">
+  import BoardView from "../BoardView.svelte";
   import { updatePawnGhost, validatePawn, validateWall } from "../GameLogic";
-  import HrQuoridorView from "../HrQuoridorView.svelte";
   import type { Grid, GridType, Position } from "../Layout";
   import { GridLayout, None, Piece } from "../Layout";
 
@@ -64,12 +64,7 @@
 </script>
 
 <div style="--board-area: {board_size}">
-  <HrQuoridorView
-    {grid_size}
-    {current_player_id}
-    {board}
-    on:clickCell={clickCell}
-  />
+  <BoardView {grid_size} {current_player_id} {board} on:clickCell={clickCell} />
 </div>
 
 <style>
