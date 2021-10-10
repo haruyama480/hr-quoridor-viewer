@@ -1,6 +1,6 @@
 import { updatePawnGhost, validatePawn, validateWall } from "./GameLogicCommon";
 import type { Board, Grid, PieceType, Position } from "./Model";
-import { Ghost, None, Piece } from "./Model";
+import { Ghost, None, Piece, Step } from "./Model";
 
 export class Game2p {
   grid_size: number;
@@ -8,10 +8,10 @@ export class Game2p {
   current_pawn: Position[];
   goal: Position[][];
   current_player: number;
-  forward_records;
-  backward_records;
+  history: Step[];
+  history_index: number;
 
-  constructor(grid_size: number) {
+  constructor(grid_size: number, history: Step[] = [], history_index = 0) {
     this.grid_size = grid_size;
     const n = grid_size;
 
@@ -44,10 +44,14 @@ export class Game2p {
 
     this.current_player = -1;
     this.nextTurn();
+
+    // history
+    this.history = history;
+    this.history_index = history_index;
   }
 
   public nextTurn(): void {
-    this.current_player = (this.current_player + 1) % 2;
+    this.current_player = (this.current_player + 1) % 2; // switch user
     updatePawnGhost(this.current_pawn[this.current_player], this.board);
   }
 
@@ -60,6 +64,7 @@ export class Game2p {
       }
       const pawn_: Grid = JSON.parse(JSON.stringify(this.board.pawn)); // deep copy
 
+      this.commitHistory(pieceType, next);
       const [prey, prex] = current;
       pawn_[prey][prex] = None; // from
       pawn_[y][x] = Piece(this.current_player, false); // to
@@ -83,8 +88,64 @@ export class Game2p {
       board_.horizontal_wall[y][x] = Piece(this.current_player, false);
     }
     if (validateWall(this.current_pawn, this.goal, board_)) {
+      this.commitHistory(pieceType, next);
       this.board = board_;
       return true;
     }
+  }
+
+  public commitHistory(piece: PieceType, next: Position): void {
+    const current: Position = this.current_pawn[this.current_player];
+    const history_ = this.history.slice(0, this.history_index);
+    this.history_index++;
+    history_.push({ piece, from: current, to: next });
+    this.history = history_;
+  }
+
+  public previousStep(): boolean {
+    if (this.history_index - 1 < 0) {
+      return false;
+    }
+    this.history_index--;
+    const step = this.history[this.history_index];
+    const kind = step.piece.kind;
+    const [fromy, fromx] = step.from;
+    const [toy, tox] = step.to;
+    if (kind === "pawn") {
+      const prev_player = (this.current_player + 1) % 2;
+      const pawn_: Grid = JSON.parse(JSON.stringify(this.board.pawn)); // deep copy
+      pawn_[toy][tox] = None;
+      pawn_[fromy][fromx] = Piece(prev_player, false);
+      this.board.pawn = pawn_;
+      this.current_pawn[prev_player] = [fromy, fromx];
+    } else if (kind === "vwall") {
+      this.board.vertical_wall[toy][tox] = None;
+    } else if (kind === "hwall") {
+      this.board.horizontal_wall[toy][tox] = None;
+    }
+    return true;
+  }
+
+  public nextStep(): boolean {
+    if (this.history_index + 1 > this.history.length) {
+      return false;
+    }
+    const step = this.history[this.history_index];
+    const kind = step.piece.kind;
+    const [fromy, fromx] = step.from;
+    const [toy, tox] = step.to;
+    if (kind === "pawn") {
+      const pawn_: Grid = JSON.parse(JSON.stringify(this.board.pawn)); // deep copy
+      pawn_[fromy][fromx] = None;
+      pawn_[toy][tox] = Piece(this.current_player, false);
+      this.board.pawn = pawn_;
+      this.current_pawn[this.current_player] = [toy, tox];
+    } else if (kind === "vwall") {
+      this.board.vertical_wall[toy][tox] = Piece(this.current_player, false);
+    } else if (kind === "hwall") {
+      this.board.horizontal_wall[toy][tox] = Piece(this.current_player, false);
+    }
+    this.history_index++;
+    return true;
   }
 }

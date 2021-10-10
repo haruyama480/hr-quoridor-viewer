@@ -27,3 +27,9 @@ export const UNKNOWN: PieceType = { kind: "unknown" };
 export const Pawn: PieceType = { kind: "pawn" };
 export const VWall: PieceType = { kind: "vwall" };
 export const HWall: PieceType = { kind: "hwall" };
+
+export interface Step {
+  piece: PieceType;
+  from: Position;
+  to: Position;
+}

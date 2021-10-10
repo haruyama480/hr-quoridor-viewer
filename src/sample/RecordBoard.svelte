@@ -15,7 +15,19 @@
     if (game.handleTurn(pieceType, next)) {
       game.nextTurn();
       game = game; // trigger render
-      console.log(JSON.stringify(game));
+    }
+  }
+
+  function nextStep() {
+    if (game.nextStep()) {
+      game.nextTurn();
+      game = game;
+    }
+  }
+  function previousStep() {
+    if (game.previousStep()) {
+      game.nextTurn();
+      game = game;
     }
   }
 
@@ -27,6 +39,8 @@
 <div style="--board-area: {board_size}">
   <BoardView {grid_size} {current_player_id} {board} on:clickCell={clickCell} />
 </div>
+<button on:click={nextStep}> next </button>
+<button on:click={previousStep}> previous </button>
 
 <style>
   div {
