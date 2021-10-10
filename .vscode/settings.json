@@ -1,9 +1,12 @@
 {
   "eslint.validate": ["typescript", "svelte"],
   "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescript]": { 
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+   },
   "[svelte]": {
     "editor.defaultFormatter": "svelte.svelte-vscode"
   },
   "editor.formatOnSave": true,
+  "svelte.enable-ts-plugin": true,
 }
