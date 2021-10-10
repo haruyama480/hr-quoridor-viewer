@@ -1,7 +1,7 @@
 <script lang="ts">
   import BoardView from "../BoardView.svelte";
   import { Game2p } from "../GameLogic2p";
-  import type { GridType, Position } from "../Model";
+  import type { PieceType, Position } from "../Model";
 
   export let board_size = "500px";
   export let grid_size = 9;
@@ -10,9 +10,9 @@
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function clickCell(event: any): void {
-    const gridType: GridType = event.detail.gridType;
+    const pieceType: PieceType = event.detail.pieceType;
     const next: Position = event.detail.nextPosition;
-    if (game.handleTurn(gridType, next)) {
+    if (game.handleTurn(pieceType, next)) {
       game.nextTurn();
       game = game; // trigger render
     }

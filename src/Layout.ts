@@ -1,4 +1,4 @@
-import type { Cell, Grid, GridType, Position } from "./Model";
+import type { Cell, Grid, PieceType, Position } from "./Model";
 import { HWall, None, Pawn, UNKNOWN, VWall } from "./Model";
 
 // helper class which handles between HTML element index and grid index
@@ -15,8 +15,8 @@ export class GridLayout {
   public isPath(i: number): boolean {
     return i % 2 === 0 && !this.isMargin(i);
   }
-  public toGridIndex(cy: number, cx: number): [GridType, Position] {
-    let gt: GridType = UNKNOWN;
+  public toGridIndex(cy: number, cx: number): [PieceType, Position] {
+    let gt: PieceType = UNKNOWN;
     if (this.isPCell(cy, cx)) {
       gt = Pawn;
     } else if (this.isVCell(cy, cx)) {

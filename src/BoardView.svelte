@@ -3,7 +3,7 @@
   import { quintOut } from "svelte/easing";
   import { crossfade, scale } from "svelte/transition";
   import { GridLayout } from "./Layout";
-  import type { Board, GridType, Position } from "./Model";
+  import type { Board, PieceType, Position } from "./Model";
 
   export let grid_size = 9;
   export let current_player_id = 0;
@@ -19,11 +19,11 @@
   const dispatch = createEventDispatcher();
   function hoverCell(cy: number, cx: number): () => void {
     return () => {
-      let gridType: GridType;
+      let pieceType: PieceType;
       let nextPosition: Position;
-      [gridType, nextPosition] = ql.toGridIndex(cy, cx);
+      [pieceType, nextPosition] = ql.toGridIndex(cy, cx);
       dispatch("hoverCell", {
-        gridType,
+        pieceType,
         nextPosition,
         cx, // to handle clicked margin
         cy,
@@ -32,11 +32,11 @@
   }
   function clickCell(cy: number, cx: number): () => void {
     return () => {
-      let gridType: GridType;
+      let pieceType: PieceType;
       let nextPosition: Position;
-      [gridType, nextPosition] = ql.toGridIndex(cy, cx);
+      [pieceType, nextPosition] = ql.toGridIndex(cy, cx);
       dispatch("clickCell", {
-        gridType,
+        pieceType,
         nextPosition,
         cx, // to handle clicked margin
         cy,

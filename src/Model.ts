@@ -19,11 +19,11 @@ export interface Board {
   horizontal_wall: Grid;
 }
 
-export type GridTypeEnum = "unknown" | "pawn" | "vwall" | "hwall";
-export interface GridType {
-  kind: GridTypeEnum;
+export type PieceTypeEnum = "unknown" | "pawn" | "vwall" | "hwall";
+export interface PieceType {
+  kind: PieceTypeEnum;
 }
-export const UNKNOWN: GridType = { kind: "unknown" };
-export const Pawn: GridType = { kind: "pawn" };
-export const VWall: GridType = { kind: "vwall" };
-export const HWall: GridType = { kind: "hwall" };
+export const UNKNOWN: PieceType = { kind: "unknown" };
+export const Pawn: PieceType = { kind: "pawn" };
+export const VWall: PieceType = { kind: "vwall" };
+export const HWall: PieceType = { kind: "hwall" };

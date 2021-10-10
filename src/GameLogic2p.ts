@@ -1,5 +1,5 @@
 import { updatePawnGhost, validatePawn, validateWall } from "./GameLogicCommon";
-import type { Board, Grid, GridType, Position } from "./Model";
+import type { Board, Grid, PieceType, Position } from "./Model";
 import { Ghost, None, Piece } from "./Model";
 
 export class Game2p {
@@ -8,6 +8,8 @@ export class Game2p {
   current_pawn: Position[];
   goal: Position[][];
   current_player: number;
+  forward_records;
+  backward_records;
 
   constructor(grid_size: number) {
     this.grid_size = grid_size;
@@ -49,10 +51,10 @@ export class Game2p {
     updatePawnGhost(this.current_pawn[this.current_player], this.board);
   }
 
-  public handleTurn(gridType: GridType, next: Position): boolean {
+  public handleTurn(pieceType: PieceType, next: Position): boolean {
     const current: Position = this.current_pawn[this.current_player];
     const [y, x] = next;
-    if (gridType.kind === "pawn") {
+    if (pieceType.kind === "pawn") {
       if (!validatePawn(current, next, this.board)) {
         return false;
       }
@@ -67,13 +69,13 @@ export class Game2p {
     }
 
     const board_ = JSON.parse(JSON.stringify(this.board)); // deep copy
-    if (gridType.kind === "vwall") {
+    if (pieceType.kind === "vwall") {
       if (y === this.grid_size - 1) return false;
       if (this.board.vertical_wall[y][x].kind === "piece") {
         return false;
       }
       board_.vertical_wall[y][x] = Piece(this.current_player, false);
-    } else if (gridType.kind === "hwall") {
+    } else if (pieceType.kind === "hwall") {
       if (x === this.grid_size - 1) return false;
       if (this.board.horizontal_wall[y][x].kind === "piece") {
         return false;
