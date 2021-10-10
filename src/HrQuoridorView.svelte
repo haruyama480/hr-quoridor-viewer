@@ -80,7 +80,7 @@
           on:click={clickCell(y, x)}
         >
           {#if !ql.isMargin(y) && !ql.isMargin(x)}
-            <div class="cell" style="height: 100%; width:100%;">
+            <div class="cell">
               {#if ql.isPCell(y, x)}
                 {#if ql.getPawn(pawn, y, x).kind === "piece"}
                   <div
@@ -171,6 +171,8 @@
     flex: 0.3 auto;
   }
   .cell {
+    height: 100%;
+    width: 100%;
     position: relative;
     display: flex;
   }
