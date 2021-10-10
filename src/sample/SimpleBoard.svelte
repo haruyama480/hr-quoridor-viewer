@@ -1,6 +1,6 @@
 <script lang="ts">
   import BoardView from "../BoardView.svelte";
-  import { updatePawnGhost, validatePawn, validateWall } from "../GameLogic";
+  import { updatePawnGhost, validatePawn, validateWall } from "../GameLogicCommon";
   import type { Grid, GridType, Position } from "../Layout";
   import { GridLayout, None, Piece } from "../Layout";
 
