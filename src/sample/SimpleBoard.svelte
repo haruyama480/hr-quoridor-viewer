@@ -4,7 +4,7 @@
     validatePawn,
     validateWall,
   } from "../HrQuoridorGameLogic";
-  import type { Grid, Position } from "../HrQuoridorLayout";
+  import type { Grid, GridType, Position } from "../HrQuoridorLayout";
   import { HrQuoridorLayout, None, Piece } from "../HrQuoridorLayout";
   import HrQuoridorView from "../HrQuoridorView.svelte";
 
@@ -26,12 +26,11 @@
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function clickCell(event: any): void {
-    const cy = event.detail.cy;
-    const cx = event.detail.cx;
+    const gridType: GridType = event.detail.gridType;
+    const next: Position = event.detail.nextPosition;
     const current: Position = current_pawn[current_player_id];
-    const next: Position = ql.toIndex(cy, cx);
     let [y, x] = next;
-    if (ql.isPCell(cy, cx)) {
+    if (gridType.kind === "pawn") {
       if (!validatePawn(current, next, board)) {
         return;
       }
@@ -47,13 +46,13 @@
     }
 
     let board_ = JSON.parse(JSON.stringify(board)); // deep copy
-    if (ql.isVCell(cy, cx)) {
+    if (gridType.kind === "vwall") {
       if (y === grid_size - 1) return;
       if (board.vertical_wall[y][x].kind === "piece") {
         return;
       }
       board_.vertical_wall[y][x] = Piece(current_player_id, false);
-    } else if (ql.isHCell(cy, cx)) {
+    } else if (gridType.kind === "hwall") {
       if (x === grid_size - 1) return;
       if (board.horizontal_wall[y][x].kind === "piece") {
         return;

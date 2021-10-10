@@ -16,6 +16,15 @@ export function gmap(grid: Grid, f: (Cell) => Cell): Grid {
   return grid.map((row) => row.map((cell) => f(cell)));
 }
 
+export type GridTypeEnum = "unknown" | "pawn" | "vwall" | "hwall";
+export interface GridType {
+  kind: GridTypeEnum;
+}
+export const UNKNOWN: GridType = { kind: "unknown" };
+export const Pawn: GridType = { kind: "pawn" };
+export const VWall: GridType = { kind: "vwall" };
+export const HWall: GridType = { kind: "hwall" };
+
 export interface Board {
   pawn: Grid;
   vertical_wall: Grid;
@@ -73,12 +82,20 @@ export class HrQuoridorLayout {
   public isPath(i: number): boolean {
     return i % 2 === 0 && !this.isMargin(i);
   }
-  public toIndex(cy: number, cx: number): [number, number] {
+  public toGridIndex(cy: number, cx: number): [GridType, Position] {
+    let gt: GridType = UNKNOWN;
+    if (this.isPCell(cy, cx)) {
+      gt = Pawn;
+    } else if (this.isVCell(cy, cx)) {
+      gt = VWall;
+    } else if (this.isHCell(cy, cx)) {
+      gt = HWall;
+    }
     // PCell, VCell, HCellをすべて0始まりのindexに
     // marginは、-1 や grid_size-1 になったりする
     const y = Math.floor((cy - 1) / 2);
     const x = Math.floor((cx - 1) / 2);
-    return [y, x];
+    return [gt, [y, x]];
   }
 
   // PCell : where a pawn can be exist
@@ -89,11 +106,11 @@ export class HrQuoridorLayout {
     return this.hasPCell(cx) && this.hasPCell(cy);
   }
   public getPawn(map: Grid, cy: number, cx: number): Cell {
-    const [y, x] = this.toIndex(cy, cx);
-    if (this.isPCell(cy, cx)) {
-      return map[y][x];
-    } else {
+    const [gt, [y, x]] = this.toGridIndex(cy, cx);
+    if (gt.kind !== "pawn") {
       return None;
+    } else {
+      return map[y][x];
     }
   }
 
@@ -103,8 +120,8 @@ export class HrQuoridorLayout {
   }
   public getVerticalWall(map: Grid, cy: number, cx: number): Cell {
     // eslint-disable-next-line prefer-const
-    let [y, x] = this.toIndex(cy, cx);
-    if (!this.isVCell(cy, cx) || y === this.grid_size - 1) return None;
+    const [gt, [y, x]] = this.toGridIndex(cy, cx);
+    if (gt.kind !== "vwall" || y === this.grid_size - 1) return None;
     return map[y][x];
   }
 
@@ -114,8 +131,8 @@ export class HrQuoridorLayout {
   }
   public getHorizontalWall(map: Grid, cy: number, cx: number): Cell {
     // eslint-disable-next-line prefer-const
-    let [y, x] = this.toIndex(cy, cx);
-    if (!this.isHCell(cy, cx) || x === this.grid_size - 1) return None;
+    const [gt, [y, x]] = this.toGridIndex(cy, cx);
+    if (gt.kind !== "hwall" || x === this.grid_size - 1) return None;
     return map[y][x];
   }
 }

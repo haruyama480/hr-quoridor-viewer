@@ -2,7 +2,12 @@
   import { createEventDispatcher } from "svelte";
   import { quintOut } from "svelte/easing";
   import { crossfade, scale } from "svelte/transition";
-  import { Board, HrQuoridorLayout } from "./HrQuoridorLayout";
+  import {
+    Board,
+    GridType,
+    HrQuoridorLayout,
+    Position,
+  } from "./HrQuoridorLayout";
 
   export let grid_size = 9;
   export let current_player_id = 0;
@@ -26,8 +31,13 @@
   }
   function clickCell(cy: number, cx: number): () => void {
     return () => {
+      let gridType: GridType;
+      let nextPosition: Position;
+      [gridType, nextPosition] = ql.toGridIndex(cy, cx);
       dispatch("clickCell", {
-        cx,
+        gridType,
+        nextPosition,
+        cx, // to handle clicked margin
         cy,
       });
     };
