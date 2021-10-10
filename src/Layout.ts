@@ -12,9 +12,6 @@ export function Piece(pid: number, ntb: boolean): Cell {
 
 export type Position = [number, number];
 export type Grid = Cell[][];
-export function gmap(grid: Grid, f: (Cell) => Cell): Grid {
-  return grid.map((row) => row.map((cell) => f(cell)));
-}
 
 export type GridTypeEnum = "unknown" | "pawn" | "vwall" | "hwall";
 export interface GridType {
