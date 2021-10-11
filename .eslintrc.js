@@ -13,6 +13,7 @@ module.exports = {
   ],
   rules: {
     // ...
+    "meta.hasSuggestions": true,
   },
   settings: {
     // 'svelte3/typescript': () => require('typescript'), // pass the TypeScript package to the Svelte plugin
