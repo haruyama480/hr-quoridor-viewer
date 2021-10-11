@@ -247,9 +247,9 @@
   }
 
   .player0 {
-    background: #2a2a2a;
+    background: #fff;
   }
   .player1 {
-    background: #fff;
+    background: #2a2a2a;
   }
 </style>
