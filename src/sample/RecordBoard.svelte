@@ -2,6 +2,7 @@
   import BoardView from "../BoardView.svelte";
   import { Game2p } from "../GameLogic2p";
   import type { PieceType, Position } from "../Model";
+  import Clipboard from "../util/CopyClipBoard.svelte";
 
   export let board_size = "500px";
   export let grid_size = 9;
@@ -43,9 +44,16 @@
 <button on:click={previousStep}> previous </button>
 <p>{game.dumpHistory()}</p>
 
+<Clipboard text={game.dumpHistory()} let:copy>
+  <button on:click={copy}>Copy</button>
+</Clipboard>
+
 <style>
   div {
     height: var(--board-area);
     width: var(--board-area);
+  }
+  button:active {
+    transform: translateY(2px);
   }
 </style>
