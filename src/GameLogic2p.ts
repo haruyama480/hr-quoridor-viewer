@@ -106,6 +106,9 @@ export class Game2p {
   public handleTurn(pieceType: PieceType, next: Position): boolean {
     const current: Position = this.current_pawn[this.current_player];
     const [y, x] = next;
+    if (pieceType.kind === "unknown") {
+      return false;
+    }
     if (pieceType.kind === "pawn") {
       if (!validatePawn(current, next, this.board)) {
         return false;
