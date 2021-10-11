@@ -43,6 +43,11 @@
   $: grid_size = game.grid_size;
   $: current_player_id = game.current_player;
   $: board = game.board;
+  $: share_url =
+    window.location.origin +
+    window.location.pathname +
+    "?history=" +
+    game.dumpHistory();
 </script>
 
 <div style="--board-area: {board_size}">
@@ -52,7 +57,7 @@
 <button on:click={previousStep}> previous </button>
 <p>{game.dumpHistory()}</p>
 
-<Clipboard text={game.dumpHistory()} let:copy>
+<Clipboard text={share_url} let:copy>
   <button on:click={copy}>Copy</button>
 </Clipboard>
 <button on:click={clear}>Clear</button>
