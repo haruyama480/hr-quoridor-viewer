@@ -37,7 +37,9 @@
       game = game;
     }
   }
-
+  function clear() {
+    game = new Game2p(grid_size);
+  }
   $: grid_size = game.grid_size;
   $: current_player_id = game.current_player;
   $: board = game.board;
@@ -53,6 +55,7 @@
 <Clipboard text={game.dumpHistory()} let:copy>
   <button on:click={copy}>Copy</button>
 </Clipboard>
+<button on:click={clear}>Clear</button>
 
 <style>
   div {
