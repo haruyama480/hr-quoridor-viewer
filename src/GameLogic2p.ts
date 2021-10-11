@@ -154,15 +154,13 @@ export class Game2p {
     for (let i = 0; i < this.history.length; i++) {
       const step = this.history[i];
       let ss = "";
-      if (step.piece.kind === "pawn") {
-        ss += "p";
-      } else if (step.piece.kind === "vwall") {
+      ss += String.fromCharCode("a".charCodeAt(0) + step.to[0]);
+      ss += step.to[1] + 1;
+      if (step.piece.kind === "vwall") {
         ss += "v";
       } else if (step.piece.kind === "hwall") {
         ss += "h";
       }
-      ss += step.to[0];
-      ss += step.to[1];
       ret.push(ss);
     }
     return ret;
