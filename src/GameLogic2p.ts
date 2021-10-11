@@ -154,8 +154,8 @@ export class Game2p {
     for (let i = 0; i < this.history.length; i++) {
       const step = this.history[i];
       let ss = "";
-      ss += String.fromCharCode("a".charCodeAt(0) + step.to[0]);
-      ss += step.to[1] + 1;
+      ss += String.fromCharCode("a".charCodeAt(0) + step.to[1]);
+      ss += step.to[0] + 1;
       if (step.piece.kind === "vwall") {
         ss += "v";
       } else if (step.piece.kind === "hwall") {
