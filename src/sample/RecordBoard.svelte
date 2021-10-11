@@ -8,6 +8,12 @@
   export let grid_size = 9;
 
   let game = new Game2p(grid_size);
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has("history")) {
+    const history_str = urlParams.get("history");
+    game.loadHistory(history_str);
+    console.log(history_str);
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function clickCell(event: any): void {

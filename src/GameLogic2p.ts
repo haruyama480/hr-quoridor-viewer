@@ -1,6 +1,6 @@
 import { updatePawnGhost, validatePawn, validateWall } from "./GameLogicCommon";
 import type { Board, Grid, PieceType, Position } from "./Model";
-import { Ghost, None, Piece, Step } from "./Model";
+import { Ghost, HWall, None, Pawn, Piece, Step, VWall } from "./Model";
 
 export class Game2p {
   grid_size: number;
@@ -52,6 +52,54 @@ export class Game2p {
 
   public nextTurn(): void {
     this.current_player = (this.current_player + 1) % 2; // switch user
+    updatePawnGhost(this.current_pawn[this.current_player], this.board);
+  }
+
+  public loadHistory(history: string): void {
+    // for
+    // board, current_pawn, current_player
+    // history, history_index
+    const board_: Board = JSON.parse(JSON.stringify(this.board)); // deep copy
+    history.split(",").forEach((step_str) => {
+      const y = parseInt(step_str[1]) - 1;
+      const x = step_str[0].codePointAt(0) - "a".codePointAt(0);
+      const to: Position = [y, x];
+
+      let piece: PieceType;
+      let from: Position;
+      if (step_str.length === 2) {
+        piece = Pawn;
+        from = this.current_pawn[this.current_player];
+      } else if (step_str.length === 3 && step_str[2] === "v") {
+        piece = VWall;
+        from = [-1, -1];
+      } else if (step_str.length === 3 && step_str[2] === "h") {
+        piece = HWall;
+        from = [-1, -1];
+      } else {
+        return;
+      }
+
+      const step: Step = { piece, to, from };
+      if (piece.kind === "pawn") {
+        board_.pawn[from[0]][from[1]] = None;
+        board_.pawn[to[0]][to[1]] = Piece(this.current_player, false);
+        this.current_pawn[this.current_player] = to;
+      } else if (piece.kind === "vwall") {
+        board_.vertical_wall[to[0]][to[1]] = Piece(this.current_player, false);
+      } else if (piece.kind === "hwall") {
+        board_.horizontal_wall[to[0]][to[1]] = Piece(
+          this.current_player,
+          false
+        );
+      }
+      this.history.push(step);
+      this.history_index++;
+      this.current_player = (this.current_player + 1) % 2;
+    });
+    this.board = board_;
+
+    // nextTurn
     updatePawnGhost(this.current_pawn[this.current_player], this.board);
   }
 
