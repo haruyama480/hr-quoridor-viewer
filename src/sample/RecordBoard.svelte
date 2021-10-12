@@ -53,14 +53,15 @@
 <div style="--board-area: {board_size}">
   <BoardView {grid_size} {current_player_id} {board} on:clickCell={clickCell} />
 </div>
-<button on:click={nextStep}> next </button>
-<button on:click={previousStep}> previous </button>
-<p>{game.dumpHistory()}</p>
-
-<Clipboard text={share_url} let:copy>
-  <button on:click={copy}>Copy</button>
-</Clipboard>
-<button on:click={clear}>Clear</button>
+<div style="margin: 5px">
+  <button on:click={nextStep}> next </button>
+  <button on:click={previousStep}> previous </button>
+  <Clipboard text={share_url} let:copy>
+    <button on:click={copy}>Copy</button>
+  </Clipboard>
+  <button on:click={clear}>Clear</button>
+  <p>{game.dumpHistory()}</p>
+</div>
 
 <style>
   div {
