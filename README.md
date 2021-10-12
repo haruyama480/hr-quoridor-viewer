@@ -1,11 +1,13 @@
 # hr-quoridor-viewer
 
 install
+
 ```
-npm install
+yarn install
 ```
 
 serve
+
 ```
-npm run dev
+yarn run dev
 ```
