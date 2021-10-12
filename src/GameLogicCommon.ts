@@ -256,3 +256,17 @@ export function updatePawnGhost(current: Position, board: Board): void {
     }
   }
 }
+
+export function updateWallGhost(current: Position, board: Board): void {
+  const N = board.pawn.length;
+  for (let y = 0; y < N - 1; y++) {
+    for (let x = 0; x < N - 1; x++) {
+      if (board.vertical_wall[y][x].kind !== "piece") {
+        board.vertical_wall[y][x] = Ghost;
+      }
+      if (board.horizontal_wall[y][x].kind !== "piece") {
+        board.horizontal_wall[y][x] = Ghost;
+      }
+    }
+  }
+}

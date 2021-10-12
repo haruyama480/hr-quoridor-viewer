@@ -1,4 +1,9 @@
-import { updatePawnGhost, validatePawn, validateWall } from "./GameLogicCommon";
+import {
+  updatePawnGhost,
+  updateWallGhost,
+  validatePawn,
+  validateWall,
+} from "./GameLogicCommon";
 import type { Board, Grid, PieceType, Position } from "./Model";
 import { Ghost, HWall, None, Pawn, Piece, Step, VWall } from "./Model";
 
@@ -52,7 +57,12 @@ export class Game2p {
 
   public nextTurn(): void {
     this.current_player = (this.current_player + 1) % 2; // switch user
+    this.updateGhost(this.current_pawn[this.current_player], this.board);
+  }
+
+  public updateGhost(current: Position, board: Board): void {
     updatePawnGhost(this.current_pawn[this.current_player], this.board);
+    updateWallGhost(this.current_pawn[this.current_player], this.board);
   }
 
   public loadHistory(history: string): void {
@@ -100,7 +110,7 @@ export class Game2p {
     this.board = board_;
 
     // nextTurn
-    updatePawnGhost(this.current_pawn[this.current_player], this.board);
+    this.updateGhost(this.current_pawn[this.current_player], this.board);
   }
 
   public handleTurn(pieceType: PieceType, next: Position): boolean {
