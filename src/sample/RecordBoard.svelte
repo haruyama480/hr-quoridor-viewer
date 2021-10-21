@@ -6,15 +6,18 @@
 
   export let board_size = "500px";
   export let grid_size = 9;
-  export let history_ = "";
+  export let history_ = null;
   export let step_: number = -1;
   export let showCopy: boolean = false;
+  export let showClear: boolean = false;
+  export let showHistory: boolean = false;
 
   let game = new Game2p(grid_size);
   const urlParams = new URLSearchParams(window.location.search);
-  if (history_ !== "") {
+  if (history_ !== null) {
     game.loadHistory(history_, step_);
-  } else if (urlParams.has("history")) {
+  } else if (urlParams.has("history") && false) {
+    // true for test
     const history_str = urlParams.get("history");
     const step: number = urlParams.has("step")
       ? parseInt(urlParams.get("step"))
@@ -69,8 +72,12 @@
       <button on:click={copy}>Copy</button>
     </Clipboard>
   {/if}
-  <button on:click={clear}>Clear</button>
-  <p style="margin-top: 0px;">{game.dumpHistory()}</p>
+  {#if showClear}
+    <button on:click={clear}>Clear</button>
+  {/if}
+  {#if showHistory}
+    <p style="margin-top: 0px;">{game.dumpHistory()}</p>
+  {/if}
 </div>
 
 <style>
