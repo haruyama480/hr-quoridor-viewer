@@ -8,6 +8,7 @@
   export let grid_size = 9;
   export let history_ = "";
   export let step_: number = -1;
+  export let showCopy: boolean = false;
 
   let game = new Game2p(grid_size);
   const urlParams = new URLSearchParams(window.location.search);
@@ -60,14 +61,16 @@
 <div style="--board-area: {board_size}">
   <BoardView {grid_size} {current_player_id} {board} on:clickCell={clickCell} />
 </div>
-<div style="margin: 5px">
+<div style="margin: 5px; width: {board_size}">
   <button on:click={nextStep}> next </button>
   <button on:click={previousStep}> previous </button>
-  <Clipboard text={share_url} let:copy>
-    <button on:click={copy}>Copy</button>
-  </Clipboard>
+  {#if showCopy}
+    <Clipboard text={share_url} let:copy>
+      <button on:click={copy}>Copy</button>
+    </Clipboard>
+  {/if}
   <button on:click={clear}>Clear</button>
-  <p>{game.dumpHistory()}</p>
+  <p style="margin-top: 0px;">{game.dumpHistory()}</p>
 </div>
 
 <style>
@@ -77,5 +80,12 @@
   }
   button:active {
     transform: translateY(2px);
+  }
+
+  p {
+    /* https://stackoverflow.com/a/5852740 */
+    word-wrap: break-word; /* IE 5.5-7 */
+    white-space: -moz-pre-wrap; /* Firefox 1.0-2.0 */
+    white-space: pre-wrap; /* current browsers */
   }
 </style>
