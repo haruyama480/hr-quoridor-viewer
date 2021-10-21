@@ -65,12 +65,25 @@ export class Game2p {
     updateWallGhost(this.current_pawn[this.current_player], this.board);
   }
 
-  public loadHistory(history: string): void {
+  public loadHistory(history: string, step: number = -1): void {
     // for
     // board, current_pawn, current_player
     // history, history_index
     const board_: Board = JSON.parse(JSON.stringify(this.board)); // deep copy
-    history.split(",").forEach((step_str) => {
+
+    const n = board_.pawn.length;
+    const center = Math.floor(n / 2);
+    let prev_position: Position[] = [
+      [0, center],
+      [n - 1, center],
+    ];
+
+    let steps = history.split(",");
+    const step_n = step === -1 ? steps.length : step;
+    for (let i = 0; i < steps.length; i++) {
+      const step_str = steps[i];
+      const current_player = i % 2;
+
       const y = parseInt(step_str[1]) - 1;
       const x = step_str[0].codePointAt(0) - "a".codePointAt(0);
       const to: Position = [y, x];
@@ -79,7 +92,7 @@ export class Game2p {
       let from: Position;
       if (step_str.length === 2) {
         piece = Pawn;
-        from = this.current_pawn[this.current_player];
+        from = prev_position[current_player];
       } else if (step_str.length === 3 && step_str[2] === "v") {
         piece = VWall;
         from = [-1, -1];
@@ -91,23 +104,28 @@ export class Game2p {
       }
 
       const step: Step = { piece, to, from };
+      this.history.push(step);
+
+      if (i >= step_n) {
+        if (piece.kind === "pawn") {
+          prev_position[current_player] = to;
+        }
+        continue;
+      }
       if (piece.kind === "pawn") {
         board_.pawn[from[0]][from[1]] = None;
-        board_.pawn[to[0]][to[1]] = Piece(this.current_player, false);
-        this.current_pawn[this.current_player] = to;
+        board_.pawn[to[0]][to[1]] = Piece(current_player, false);
+        this.current_pawn[current_player] = to;
+        prev_position[current_player] = to;
       } else if (piece.kind === "vwall") {
-        board_.vertical_wall[to[0]][to[1]] = Piece(this.current_player, false);
+        board_.vertical_wall[to[0]][to[1]] = Piece(current_player, false);
       } else if (piece.kind === "hwall") {
-        board_.horizontal_wall[to[0]][to[1]] = Piece(
-          this.current_player,
-          false
-        );
+        board_.horizontal_wall[to[0]][to[1]] = Piece(current_player, false);
       }
-      this.history.push(step);
       this.history_index++;
-      this.current_player = (this.current_player + 1) % 2;
-    });
+    }
     this.board = board_;
+    this.current_player = step_n % 2;
 
     // nextTurn
     this.updateGhost(this.current_pawn[this.current_player], this.board);

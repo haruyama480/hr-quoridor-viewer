@@ -6,12 +6,19 @@
 
   export let board_size = "500px";
   export let grid_size = 9;
+  export let history_ = "";
+  export let step_: number = -1;
 
   let game = new Game2p(grid_size);
   const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.has("history")) {
+  if (history_ !== "") {
+    game.loadHistory(history_, step_);
+  } else if (urlParams.has("history")) {
     const history_str = urlParams.get("history");
-    game.loadHistory(history_str);
+    const step: number = urlParams.has("step")
+      ? parseInt(urlParams.get("step"))
+      : -1;
+    game.loadHistory(history_str, step);
     console.log(history_str);
   }
 
