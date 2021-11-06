@@ -4,6 +4,8 @@
   import RecordBoard from "./sample/RecordBoard.svelte";
   const source_head = `
 # コリドールの紹介
+2021.10.22 by kazusaku
+
 ### はじめに
 研究室時代に半年ぐらいハマっていたコリドールというボドゲを紹介します
 ##### 良さ
@@ -47,12 +49,16 @@ https://www.youtube.com/channel/UCT0yvshNgB1Nx-xdB5fTVdg
 
 ##### リンク集
 リンク
-- 二人零和有限確定完全情報ゲーム wiki　https://ja.wikipedia.org/wiki/%E4%BA%8C%E4%BA%BA%E9%9B%B6%E5%92%8C%E6%9C%89%E9%99%90%E7%A2%BA%E5%AE%9A%E5%AE%8C%E5%85%A8%E6%83%85%E5%A0%B1%E3%82%B2%E3%83%BC%E3%83%A0
 - コリドール wiki
   - https://ja.wikipedia.org/wiki/%E3%82%B3%E3%83%AA%E3%83%89%E3%83%BC%E3%83%AB
   - https://en.wikipedia.org/wiki/Quoridor
 - コリドールfansite https://www.quoridorfansite.com/
-- 日本コリドール協会 https://quoridor.jp/
+- 考察wiki https://quoridor.jp/wiki/
+- quoridorstrats(英語による考察) https://quoridorstrats.wordpress.com/
+- 日本コリドール協会(thdr) https://quoridor.jp/
+- コリドールAI
+  - https://ir5.github.io/quoridor-AI/dist/
+  - https://gorisanson.github.io/quoridor-ai/
 
 論文
 - 読んでない
@@ -61,12 +67,9 @@ https://www.youtube.com/channel/UCT0yvshNgB1Nx-xdB5fTVdg
 - [mastering quoridor](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.100.5204&rep=rep1&type=pdf)
 - [A Quoridor-playing Agent](https://project.dke.maastrichtuniversity.nl/games/files/bsc/Mertens_BSc-paper.pdf)
 
-その他
-- コリドールAIという試み https://twitter.com/apmayfes/status/1128620591441797121?s=20
-
 ### おわりに
-- 手筋の研究とか全然してない
-- css辛い
+- svelte/css書いてばっかで、全然研究できてないorz
+- 興味持った方いれば、ボードゲームアリーナで対戦しましょう！
 `;
 </script>
 
@@ -88,7 +91,7 @@ https://www.youtube.com/channel/UCT0yvshNgB1Nx-xdB5fTVdg
       <div class="board-cont">
         <div class="board">
           <img
-            src="/img/complexities.png"
+            src="./img/complexities.png"
             alt="complexities"
             style="width: 300px"
           />
@@ -291,11 +294,11 @@ https://www.youtube.com/channel/UCT0yvshNgB1Nx-xdB5fTVdg
 <SvelteMarkdown source={source_appendix1} />
 
 <div style="margin-left:100px">
-  <img src="/img/1.png" alt="1" style="width: 500px" />
-  <img src="/img/2.png" alt="2" style="width: 500px" />
-  <img src="/img/3.png" alt="3" style="width: 500px" />
-  <img src="/img/4.png" alt="4" style="width: 500px" />
-  <img src="/img/5.png" alt="5" style="width: 500px" />
+  <img src="./img/1.png" alt="1" style="width: 500px" />
+  <img src="./img/2.png" alt="2" style="width: 500px" />
+  <img src="./img/3.png" alt="3" style="width: 500px" />
+  <img src="./img/4.png" alt="4" style="width: 500px" />
+  <img src="./img/5.png" alt="5" style="width: 500px" />
 </div>
 
 <SvelteMarkdown source={source_appendix2} />
