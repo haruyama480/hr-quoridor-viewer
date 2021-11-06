@@ -1,7 +1,7 @@
 <script lang="ts">
   import ChevronLeft from "svelte-material-icons/ChevronLeft.svelte";
   import ChevronRight from "svelte-material-icons/ChevronRight.svelte";
-  import ShareVariant from "svelte-material-icons/ShareVariant.svelte";
+  import ClipboardArrowDown from "svelte-material-icons/ClipboardArrowDown.svelte";
   import TrashCan from "svelte-material-icons/TrashCan.svelte";
   import BoardView from "../BoardView.svelte";
   import { Game2p } from "../GameLogic2p";
@@ -75,7 +75,7 @@
     on:click={nextStep}><ChevronRight /></button
   >{#if showClear}<button on:click={clear}><TrashCan /></button
     >{/if}{#if showCopy}<Clipboard text={share_url} let:copy
-      ><button on:click={copy}> <ShareVariant /> </button></Clipboard
+      ><button on:click={copy}> <ClipboardArrowDown /> </button></Clipboard
     >{/if}
   <!-- agry because avoid whitespace between buttons https://svelte.dev/repl/80b8863b778c4b608537a98fb811de43?version=3.16.7 -->
 </div>
