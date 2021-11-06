@@ -1,9 +1,12 @@
 <script lang="ts">
+  import ChevronLeft from "svelte-material-icons/ChevronLeft.svelte";
+  import ChevronRight from "svelte-material-icons/ChevronRight.svelte";
+  import ShareVariant from "svelte-material-icons/ShareVariant.svelte";
+  import TrashCan from "svelte-material-icons/TrashCan.svelte";
   import BoardView from "../BoardView.svelte";
   import { Game2p } from "../GameLogic2p";
   import type { PieceType, Position } from "../Model";
   import Clipboard from "../util/CopyClipBoard.svelte";
-
   export let board_size = "500px";
   export let grid_size = 9;
   export let history_ = null;
@@ -11,12 +14,13 @@
   export let showCopy: boolean = false;
   export let showClear: boolean = false;
   export let showHistory: boolean = false;
+  export let loadFromUrl: boolean = false;
 
   let game = new Game2p(grid_size);
   const urlParams = new URLSearchParams(window.location.search);
-  if (history_ !== null) {
+  if (loadFromUrl === false) {
     game.loadHistory(history_, step_);
-  } else if (urlParams.has("history") && false) {
+  } else if (urlParams.has("history")) {
     // true for test
     const history_str = urlParams.get("history");
     const step: number = urlParams.has("step")
@@ -65,15 +69,15 @@
   <BoardView {grid_size} {current_player_id} {board} on:clickCell={clickCell} />
 </div>
 <div style="margin: 5px; width: {board_size}">
-  <button on:click={nextStep}> next </button>
-  <button on:click={previousStep}> previous </button>
+  <button on:click={previousStep}> <ChevronLeft /> </button>
+  <button on:click={nextStep}> <ChevronRight /> </button>
+  {#if showClear}
+    <button on:click={clear}><TrashCan /></button>
+  {/if}
   {#if showCopy}
     <Clipboard text={share_url} let:copy>
-      <button on:click={copy}>Copy</button>
+      <button on:click={copy}> <ShareVariant /> </button>
     </Clipboard>
-  {/if}
-  {#if showClear}
-    <button on:click={clear}>Clear</button>
   {/if}
   {#if showHistory}
     <p style="margin-top: 0px;">{game.dumpHistory()}</p>

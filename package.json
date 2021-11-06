@@ -30,6 +30,7 @@
   "dependencies": {
     "sirv-cli": "^1.0.0",
     "svelte-markdown": "^0.1.12",
+    "svelte-material-icons": "^1.0.3",
     "svelte-youtube": "^0.0.2"
   }
 }

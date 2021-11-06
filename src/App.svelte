@@ -7,4 +7,6 @@
   board_size="60vmin"
   showCopy={true}
   showClear={true}
+  loadFromUrl={true}
+  showHistory={true}
 />
