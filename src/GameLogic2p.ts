@@ -244,4 +244,11 @@ export class Game2p {
     }
     return ret;
   }
+  public dumpStep(): number {
+    if (this.history.length !== this.history_index) {
+      return this.history_index;
+    } else {
+      return -1;
+    }
+  }
 }

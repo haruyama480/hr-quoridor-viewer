@@ -58,11 +58,13 @@
   $: grid_size = game.grid_size;
   $: current_player_id = game.current_player;
   $: board = game.board;
+  $: steps_str = game.dumpStep() < 0 ? "" : "&step=" + game.dumpStep();
   $: share_url =
     window.location.origin +
     window.location.pathname +
     "?history=" +
-    game.dumpHistory();
+    game.dumpHistory() +
+    steps_str;
 </script>
 
 <div style="width: {board_size}" class="board">
