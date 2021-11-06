@@ -1,12 +1,15 @@
 <script lang="ts">
   import RecordBoard from "./sample/RecordBoard.svelte";
+
+  let conianer_width = 0;
+  $: content_size = Math.min(conianer_width, 500) + "px";
 </script>
 
-<div class="container">
-  <div class="content">
+<div class="container" bind:clientWidth={conianer_width}>
+  <div>
     <RecordBoard
       grid_size={9}
-      board_size="100%"
+      board_size={content_size}
       showCopy={true}
       showClear={true}
       loadFromUrl={true}
@@ -21,10 +24,5 @@
     flex-direction: row;
     width: 100%;
     justify-content: space-evenly;
-  }
-  .content {
-    flex: 1 1 auto;
-    max-width: 500px;
-    aspect-ratio: 1;
   }
 </style>

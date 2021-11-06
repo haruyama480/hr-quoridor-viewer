@@ -67,7 +67,7 @@
     steps_str;
 </script>
 
-<div style="width: {board_size}" class="board">
+<div style="width: {board_size}; height: {board_size}">
   <BoardView {grid_size} {current_player_id} {board} on:clickCell={clickCell} />
 </div>
 <div style="width: {board_size}">
@@ -86,9 +86,6 @@
 </div>
 
 <style>
-  .board {
-    aspect-ratio: 1;
-  }
   button:active {
     transform: translateY(2px);
   }
