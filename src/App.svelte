@@ -109,6 +109,12 @@ https://www.youtube.com/channel/UCT0yvshNgB1Nx-xdB5fTVdg
 
 <h5>レギュレーション</h5>
 <ul>
+  <li>
+    <a href="https://quoridor.jp/HowToPlayQuoridor.png"
+      >https://quoridor.jp/HowToPlayQuoridor.png</a
+    >
+    の一枚絵がわかりやすい
+  </li>
   <li>下辺からスタートし、上辺に先に到着したらゲーム終了</li>
   <li>1ターンにポーンを移動するか板を置くか</li>
   <li>板は相手のゴールを完全に塞ぐように置けない</li>
