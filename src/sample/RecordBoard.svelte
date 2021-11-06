@@ -65,29 +65,27 @@
     game.dumpHistory();
 </script>
 
-<div style="--board-area: {board_size}">
+<div style="width: {board_size}" class="board">
   <BoardView {grid_size} {current_player_id} {board} on:clickCell={clickCell} />
 </div>
-<div style="margin: 5px; width: {board_size}">
-  <button on:click={previousStep}> <ChevronLeft /> </button>
-  <button on:click={nextStep}> <ChevronRight /> </button>
-  {#if showClear}
-    <button on:click={clear}><TrashCan /></button>
-  {/if}
-  {#if showCopy}
-    <Clipboard text={share_url} let:copy>
-      <button on:click={copy}> <ShareVariant /> </button>
-    </Clipboard>
-  {/if}
+<div style="width: {board_size}">
+  <button on:click={previousStep}> <ChevronLeft /> </button><button
+    on:click={nextStep}><ChevronRight /></button
+  >{#if showClear}<button on:click={clear}><TrashCan /></button
+    >{/if}{#if showCopy}<Clipboard text={share_url} let:copy
+      ><button on:click={copy}> <ShareVariant /> </button></Clipboard
+    >{/if}
+  <!-- agry because avoid whitespace between buttons https://svelte.dev/repl/80b8863b778c4b608537a98fb811de43?version=3.16.7 -->
+</div>
+<div style="width: {board_size}">
   {#if showHistory}
     <p style="margin-top: 0px;">{game.dumpHistory()}</p>
   {/if}
 </div>
 
 <style>
-  div {
-    height: var(--board-area);
-    width: var(--board-area);
+  .board {
+    aspect-ratio: 1;
   }
   button:active {
     transform: translateY(2px);
@@ -98,5 +96,8 @@
     word-wrap: break-word; /* IE 5.5-7 */
     white-space: -moz-pre-wrap; /* Firefox 1.0-2.0 */
     white-space: pre-wrap; /* current browsers */
+  }
+  button {
+    margin: 5px;
   }
 </style>
